@@ -1,0 +1,22 @@
+{
+    "name": "koishi-plugin-maimai",
+    "description": "a koishi plugin for maimai(DX) players",
+    "private": true,
+    "version": "beta.1.0",
+    "main": "lib/index.js",
+    "typings": "lib/index.d.ts",
+    "files": [
+        "lib",
+        "dist"
+    ],
+    "license": "MIT",
+    "scripts": {},
+    "keywords": [
+        "chatbot",
+        "koishi",
+        "plugin"
+    ],
+    "peerDependencies": {
+        "koishi": "^4.5.0"
+    }
+}
