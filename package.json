@@ -1,8 +1,18 @@
 {
     "name": "koishi-plugin-maimai",
+    "author": {
+        "name": "DrLee-lihr",
+        "email": "812403lihr@sina.com",
+        "url": "https://github.com/DrLee-lihr"
+    },
     "description": "a koishi plugin for maimai(DX) players",
     "private": false,
     "version": "0.1.1",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DrLee-lihr/koishi-plugin-maimai.git"
+    },
+    "bugs": "https://github.com/DrLee-lihr/koishi-plugin-maimai/issues",
     "main": "lib/index.js",
     "typings": "lib/index.d.ts",
     "files": [
