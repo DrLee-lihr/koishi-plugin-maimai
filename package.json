@@ -9,12 +9,13 @@
         "lib",
         "dist"
     ],
-    "license": "MIT",
+    "license": "Apache-2.0",
     "scripts": {},
     "keywords": [
         "chatbot",
         "koishi",
-        "plugin"
+        "plugin",
+        "maimai"
     ],
     "peerDependencies": {
         "koishi": "^4.5.0"
