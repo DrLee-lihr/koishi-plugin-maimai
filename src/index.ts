@@ -289,6 +289,12 @@ export function apply(ctx: Context,config:Config) {
     .shortcut(/^(.*)是什么歌$/,{args:["$1"]})
 
 
+  ctx.command("maimai")
+    .subcommand(".music <id:number>")
+    .action(({session},id)=>{
+      
+    })
+
     
   ctx.command("maimai")
     .subcommand(".random 随机谱面。")
@@ -313,12 +319,13 @@ export function apply(ctx: Context,config:Config) {
         }
         var get_from=(id:number)=>maisonglist.id(id).object["basic_info"]["from"]
         var version_transform_table={
+          //选了一些好听的歌
           "真":get_from(143),//Fragrance
           "超":get_from(227),//Garakuta Doll Play
           "檄":get_from(233),//MYTHOS
           "橙":get_from(384),//VERTeX
           "晓":get_from(365),//ガラテアの螺旋
-          "桃":get_from(456),//Glorious Crown
+          "桃":get_from(462),//7thSense
           "樱":get_from(496),//AMAZING MIGHTYYYY!!!!
           "紫":get_from(589),//Panopticon
           "堇":get_from(664),//Moon of Noon
@@ -350,6 +357,6 @@ export function apply(ctx: Context,config:Config) {
     .example("m.random -l 14+ -c @dp -a t+pazolite -v 辉 -d 3 -t 标准  随机一张由@DP写的、t+pazolite作曲的、FiNALE版本的标准紫14+谱面。")
     .example("随个Tsukasa的玉子豆腐写的真代的标准白14.5")
     .example("随个Frums的白代歌")
-    .usage("注意：在使用正则快速调用时，参数需要按以下顺序排列：\n([曲师]/[谱师])[版本][标准|DX][颜色][标级]\n曲师和谱师可以调换位置。")
-    .usage("前四项参数可以省略；当想不对标级进行过滤时，使用“歌”来替代。")
+    .usage("注意：在使用正则快速调用时，参数需要按以下顺序排列：\n([曲师]/[谱师])[版本][标准|DX][颜色][标级]\n曲师和谱师可以调换位置。\n"+
+      "前四项参数可以省略；当想不对标级进行过滤时，使用“歌”来替代。")
 }
