@@ -52,7 +52,6 @@ class maichart{
     this.note_summary=note_list.join("\n")
   }
   get_probe_data(ctx:Context){
-
     return ctx.http("GET",`https://maimai.ohara-rinne.tech/api/chart/${this.song.id}/${this.difficulty}`).then(
       (response) =>{
         var object=response["data"]
@@ -87,12 +86,11 @@ class maisong{
     this.song_ds_summary=k.join("/")
     this.basic_info_summary=[`artist: ${this.object["basic_info"]["artist"]}`,`genre: ${this.object["basic_info"]["genre"]}`,
       `bpm: ${this.object["basic_info"]["bpm"]}`,`version: ${this.object["basic_info"]["from"]}`].join("\n")
-    var templist:maichart[]=[]
+    this.charts=[]
     for(var i=0;i<object["charts"].length;i++){
       var chart=new maichart(object["charts"][i],this,i)
-      templist.push(chart)
+      this.charts.push(chart)
     }
-    this.charts=templist
   }
   get_song_image(){
     return segment("image",{url:"https://www.diving-fish.com/covers/"+this.id+".jpg"})
@@ -108,14 +106,13 @@ class maimai_song_list{
       (response) =>{
         this.jsonArray=response
         this.chart_list=[]
-        var templist:maisong[]=[]
+        this.list=[]
         for(var i=0;i<this.jsonArray.length;i++){
           var song=new maisong(this.jsonArray[i])
           for(var j=0;j<=(song.has_rem?4:3);j++)
             this.chart_list.push(song.charts[j])
-          templist.push(song)
+          this.list.push(song)
         }
-        this.list=templist
       }
     )
   }
@@ -291,8 +288,10 @@ export function apply(ctx: Context,config:Config) {
 
   ctx.command("maimai")
     .subcommand(".music <id:number>")
-    .action(({session},id)=>{
-      
+    .action((_,id)=>{
+      var music_cmd=ctx.getCommand("music")
+      if(music_cmd==undefined)return "未安装此功能的依赖插件 koishi-plugin-music，请确保此插件已安装且被正确加载。"
+      else return music_cmd.execute({args:[maisonglist.id(id).object["basic_info"]["title"]],options:{platform:"netease"}})
     })
 
     
