@@ -1,3 +1,4 @@
 tsconfig.tsbuildinfo
 tsconfig.json
 node_modules
+lib
