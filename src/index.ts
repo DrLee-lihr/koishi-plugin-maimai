@@ -249,7 +249,7 @@ export function apply(ctx: Context, config: Config) {
 
 
     ctx.command("maimai")
-      .subcommand(".artist <artist:string> 搜索对应曲师的作品。")
+      .subcommand(".artist <artist:string> 搜索对应曲师的曲目。")
       .option("page", "-p [page:number] 当结果有多页时设定要输出的页码。", { fallback: 1 })
       .action(({ options }, artist) => {
         var list = maisonglist.filt((i) => i.object["basic_info"]["artist"].toLowerCase().includes(artist.toLowerCase()))
@@ -378,7 +378,7 @@ export function apply(ctx: Context, config: Config) {
 
 
     ctx.command("maimai")
-      .subcommand(".random.song")
+      .subcommand(".random.song 随机歌曲。")
       .option("artist", "-a [artist:string] 曲师。", { fallback: "" })
       .option("version", "-v [version:string] 谱面版本。", { fallback: "" })
       .action(({ options }) => {
