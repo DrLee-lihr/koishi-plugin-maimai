@@ -5,7 +5,6 @@ export interface Config {
   result_num_max: number
   alias_result_num_max: number
 }
-
 export const schema = Schema.object({
   result_num_max: Schema.number().default(10).description("返回搜索结果时单次最多显示的结果数量。"),
   alias_result_num_max: Schema.number().default(3).description("返回别名搜索结果时最多显示的结果数量。")
@@ -192,6 +191,7 @@ export function apply(ctx: Context, config: Config) {
 
 
   function register_commands() {
+
     ctx.command("maimai <id:number> [diff:string] 根据id或难度查询乐曲或谱面信息。")
       .action((argv, id, diff) => {
         var song = maisonglist.id(id)
@@ -392,6 +392,17 @@ export function apply(ctx: Context, config: Config) {
       })
       .shortcut(/^.*mai什么.*$/)
       .example("今天mai什么")
-
+    
+    
+    ctx.command("maimai")
+      .subcommand(".b40 [username:string]")
+      .action(({session},username)=>{
+        ctx.http.post("https://www.diving-fish.com/api/maimaidxprober/query/player",
+          (username==undefined)?{qq:session.userId}:{username:username})
+          .then((result)=>{
+            console.log(result)
+            throw Error("todo")
+          })
+      })
   }
 }
