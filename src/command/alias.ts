@@ -24,13 +24,11 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
       catch (_) {
         return "结果过多，请尝试使用更准确的别名进行搜索。"
       }
-      console.log(res)
       switch (typeof (res)) {
         case 'undefined': {
           return "没有找到您想找的乐曲。"
         }
         case 'object': {
-          console.log(res)
           try {
             let f = (<maisong>res)
           }
