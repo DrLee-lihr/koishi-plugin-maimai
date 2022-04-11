@@ -5,6 +5,7 @@ import maisong from "../maisong";
 
 
 export default function (ctx: Context, config: Config, maisonglist: maimai_song_list) {
+  
   ctx.command("maimai")
     .subcommand(".alias.get <id:number> 获取id对应乐曲的别名。")
     .action((argv, id) => {
