@@ -106,13 +106,4 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
         return page_split(result, config)
       }
     })
-
-
-  ctx.command("maimai")
-    .subcommand(".music <id:number>")
-    .action((_, id) => {
-      var music_cmd = ctx.getCommand("music")
-      if (music_cmd == undefined) return "未安装此功能的依赖插件 koishi-plugin-music，请确保此插件已安装且被正确加载。"
-      else return music_cmd.execute({ args: [maisonglist.id(id).object["basic_info"]["title"]], options: { platform: "netease" } })
-    })
 }

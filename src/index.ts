@@ -7,6 +7,7 @@ import apply_mai_info from './command/info'
 import apply_mai_alias from './command/alias'
 import apply_mai_random from './command/random'
 import apply_mai_b40 from './command/b40'
+import apply_mai_music from './command/music'
 
 
 export const name = 'maimai'
@@ -28,5 +29,6 @@ export function apply(ctx: Context, config: Config) {
     apply_mai_alias(ctx,config,maisonglist)
     apply_mai_random(ctx,config,maisonglist)
     apply_mai_b40(ctx,config,maisonglist)
+    apply_mai_music(ctx,config,maisonglist)
   })
 }

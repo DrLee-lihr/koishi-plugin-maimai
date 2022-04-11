@@ -1,6 +1,7 @@
 import { Context } from "koishi";
 import { Config } from "..";
 import maimai_song_list from "../maimai_song_list";
+import maisong from "../maisong";
 
 
 export default function (ctx: Context, config: Config, maisonglist: maimai_song_list) {
@@ -16,29 +17,59 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
 
   ctx.command("maimai")
     .subcommand(".alias.lookup <alias:text> 根据别名查询乐曲。")
-    .action((argv, alias) => {
-      ctx.http("GET", encodeURI("https://maimai.ohara-rinne.tech/api/alias/query/" + alias)).then((response) => {
-        if (response["data"].length == 0) {
-          argv.session.send("没有找到您想找的乐曲。")
-          return
+    .action(async (argv, alias) => {
+      try {
+        var res = await alias_get(alias, ctx, config, maisonglist)
+      }
+      catch (_) {
+        return "结果过多，请尝试使用更准确的别名进行搜索。"
+      }
+      console.log(res)
+      switch (typeof (res)) {
+        case 'undefined': {
+          return "没有找到您想找的乐曲。"
         }
-        else if (response["data"].length > config.alias_result_num_max) {
-          argv.session.send(`搜索结果过于宽泛（大于${config.alias_result_num_max}条），请尝试使用更准确更大众的别名进行搜索。`)
-          return
+        case 'object': {
+          console.log(res)
+          try {
+            let f = (<maisong>res)
+          }
+          catch {
+            let a = ["您要找的可能是以下曲目中的一首："];
+            (<any>res).forEach(element => {
+              a.push(element.song_info_summary)
+            });
+            return a.join("\n")
+          }
+          return ["您要找的可能是：", (<maisong>res).song_info_summary, (<maisong>res).get_song_image(),
+            (<maisong>res).song_ds_summary].join("\n")
         }
-        else if (response["data"].length > 1) {
-          var res: string[] = []
-          response["data"].forEach((element: JSON) => {
-            res.push(maisonglist.id(element["musicId"]).song_info_summary)
-          })
-          argv.session.send("您要找的可能是以下歌曲中的一首：\n" + res.join("\n"))
-          return
-        }
-        else {
-          var song = maisonglist.id(response["data"][0]["musicId"])
-          argv.session.send(`您要找的是不是：\n${song.song_info_summary}` + song.get_song_image() + song.song_ds_summary)
-        }
-      })
+      }
     })
     .shortcut(/^(.*)是什么歌$/, { args: ["$1"] })
+}
+
+export async function alias_get(alias: string, ctx: Context, config:Config, maisonglist:maimai_song_list) {
+  var response = await ctx.http("GET", encodeURI("https://maimai.ohara-rinne.tech/api/alias/query/" + alias))
+  if (response["data"].length == 0) {
+    return undefined
+  }
+  else if (response["data"].length > config.alias_result_num_max) {
+    throw Error("结果过多")
+  }
+  else if (response["data"].length > 1) {
+    for (let i of response["data"]) {
+      if (i["alias"] == alias) {
+        return maisonglist.id(i["musicId"])
+      }
+    }
+    var res: maisong[] = []
+    response["data"].forEach((element: JSON) => {
+      res.push(maisonglist.id(element["musicId"]))
+    })
+    return res
+  }
+  else {
+    return maisonglist.id(response["data"][0]["musicId"])
+  }
 }
