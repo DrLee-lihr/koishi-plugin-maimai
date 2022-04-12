@@ -20,7 +20,9 @@
         "dist"
     ],
     "license": "Apache-2.0",
-    "scripts": {},
+    "scripts": {
+        "build": "tsc -b"
+    },
     "keywords": [
         "chatbot",
         "koishi",
@@ -32,5 +34,8 @@
     },
     "dependencies": {
         "sharp": "^0.30.3"
+    },
+    "devDependencies": {
+        "@types/sharp": "^0.30.1"
     }
 }
