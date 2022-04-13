@@ -1,13 +1,28 @@
 import { Config } from "."
+import { difficulty } from "./maichart"
 
 
-export var difficulty_id: (string | number)[][] = [
+var difficulty_id: (string | number)[][] = [
   [0, "绿", "bsc", "basic", "bas"],
   [1, "黄", "adv", "advanced"],
   [2, "红", "exp", "expert"],
   [3, "紫", "mas", "master", "mst"],
   [4, "白", "rem", "remaster", "re:master", "remas", "remst"]
 ]
+
+export function get_difficulty_id(s: string): difficulty {
+  var diffid = 3
+  for (var i = 0; i <= 4; i++) {
+    for (var j = 0; j < difficulty_id[i].length; j++) {
+      if (s == difficulty_id[i][j]) {
+        diffid = <number>difficulty_id[i][0]
+        break
+      }
+    }
+  }
+  return <difficulty>diffid
+}
+
 export var difficulty_trans_table = { "绿": 0, "黄": 1, "红": 2, "紫": 3, "白": 4 }
 export function in_level(pred: number, level: string) {
   if (level.includes(".")) {

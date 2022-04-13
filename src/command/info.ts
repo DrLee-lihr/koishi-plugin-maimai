@@ -1,12 +1,12 @@
 import { Context } from "koishi";
 import { Config } from "..";
 import maimai_song_list from "../maimai_song_list";
-import { difficulty_id, page_split } from "../mai_tool";
+import { get_difficulty_id, page_split } from "../mai_tool";
 
 
 export default function (ctx: Context, config: Config, maisonglist: maimai_song_list) {
   ctx.command("maimai <id:number> [diff:string] 根据id或难度查询乐曲或谱面信息。")
-    .action((argv, id, diff) => {
+    .action(async (argv, id, diff) => {
       var song = maisonglist.id(id)
       if (song == undefined) {
         return "未找到乐曲。"
@@ -15,21 +15,14 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
         return [song.song_info_summary, song.get_song_image(), song.song_ds_summary, song.basic_info_summary].join("\n")
       }
       else {
-        var diffid = 5
-        for (var i = 0; i <= 4; i++) {
-          for (var j = 0; j < difficulty_id[i].length; j++) {
-            if (diff == difficulty_id[i][j]) {
-              diffid = <number>difficulty_id[i][0]
-              break
-            }
-          }
+        let chart = song.charts[get_difficulty_id(diff)]
+        let k=[song.song_info_summary,
+          song.get_song_image(), chart.base_summary, chart.note_summary]
+        try {
+          k.push(await chart.get_probe_data(ctx))
         }
-        var chart = song.charts[diffid]
-        chart.get_probe_data(ctx).then(() => {
-          argv.session.send([song.song_info_summary,
-          song.get_song_image(), chart.base_summary, chart.note_summary, chart.probe_summary].join("\n"))
-        })
-        return
+        catch { }
+        return k.join('\n')
       }
     })
     .alias("m")

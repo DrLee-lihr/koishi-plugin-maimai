@@ -17,13 +17,13 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
       MIT License
       https://github.com/koishijs/koishi-plugin-music
       */
-      async function netease(keyword:string,ctx:Context) {
+      async function netease(title:string,keyword:string,ctx:Context) {
         const data = await ctx.http.get('http://music.163.com/api/cloudsearch/pc', {
           params: { s: keyword, type: 1, offset: 0, limit: 1 },
         })
         if(data.code !== 200||
           data.result.songCount==0||
-          !data.result.songs[0].name.includes(keyword))return undefined
+          !data.result.songs[0].name.includes(title))return undefined
         return {
           type: '163',
           id: data.result.songs[0].id,
@@ -37,7 +37,7 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
       ]
       let a: { type: string; id: any; };
       for(let i of templates){
-        a=await netease(i,ctx)
+        a=await netease(song_info["title"],i,ctx)
         if(a!=undefined)break
       }
       if(a==undefined){

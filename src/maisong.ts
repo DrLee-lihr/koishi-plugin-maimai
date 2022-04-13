@@ -1,5 +1,6 @@
+import { DiffieHellman } from "crypto"
 import { segment } from "koishi"
-import maichart from "./maichart"
+import maichart, { difficulty } from "./maichart"
 
 
 
@@ -26,8 +27,8 @@ export default class {
     this.basic_info_summary = [`artist: ${this.object["basic_info"]["artist"]}`, `genre: ${this.object["basic_info"]["genre"]}`,
     `bpm: ${this.object["basic_info"]["bpm"]}`, `version: ${this.object["basic_info"]["from"]}`].join("\n")
     this.charts = []
-    for (var i = 0; i < object["charts"].length; i++) {
-      var chart = new maichart(object["charts"][i], this, i)
+    for (var i:difficulty = 0; i < (this.has_rem?5:4); i++) {
+      var chart = new maichart(object["charts"][i], this, <difficulty>i)
       this.charts.push(chart)
     }
   }

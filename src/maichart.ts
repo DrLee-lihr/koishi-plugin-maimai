@@ -1,6 +1,10 @@
 import { Context } from "koishi";
 import maisong from "./maisong";
 
+
+export type difficulty = 0 | 1 | 2 | 3 | 4
+
+
 var difficulty_name: string[] = ["BSC", "ADV", "EXP", "MAS", "ReM"]
 var difficulty_full_name: string[] = ["Basic", "Advanced", "Expert", "Master", "Re:Master"]
 var level_transform = (i: number) => {
@@ -12,14 +16,14 @@ var level_transform = (i: number) => {
 export default class {
   song: maisong
   object: JSON
-  difficulty: number
+  difficulty: difficulty
   ds: number
   chart_summary: string
   base_summary: string
   chart_summary_with_base: string
   note_summary: string
   probe_summary: string
-  constructor(object: JSON, song: maisong, difficulty: number) {
+  constructor(object: JSON, song: maisong, difficulty: difficulty) {
     this.object = object
     this.song = song
     this.difficulty = difficulty
@@ -34,15 +38,14 @@ export default class {
     note_list.push(`charter: ${object["charter"]}`)
     this.note_summary = note_list.join("\n")
   }
-  get_probe_data(ctx: Context) {
-    return ctx.http("GET", `https://maimai.ohara-rinne.tech/api/chart/${this.song.id}/${this.difficulty}`).then(
-      (response) => {
-        var object = response["data"]
-        this.probe_summary = [`tag:${object["tag"]}`,
-        `共有${object["playerCount"]}名玩家游玩了该谱面，平均达成率：${object["average"]}`,
-        `其中${object["ssscount"]}人（${Math.floor((object["ssscount"] / object["playerCount"]) * 10000) / 100}%）达成SSS`,
-        `SSS人数在同级别曲目中排名：（${object["difficultyRankInSameLevel"] + 1}/${object["songCountInSameLevel"]}）`].join("\n")
-      }
-    )
+  async get_probe_data(ctx: Context) {
+    if(this.probe_summary!=undefined)return this.probe_summary
+    let response = await ctx.http("GET", `https://maimai.ohara-rinne.tech/api/chart/${this.song.id}/${this.difficulty}`)
+    var object = response["data"]
+    this.probe_summary = [`tag:${object["tag"]}`,
+    `共有${object["playerCount"]}名玩家游玩了该谱面，平均达成率：${object["average"]}`,
+    `其中${object["ssscount"]}人（${Math.floor((object["ssscount"] / object["playerCount"]) * 10000) / 100}%）达成SSS`,
+    `SSS人数在同级别曲目中排名：（${object["difficultyRankInSameLevel"] + 1}/${object["songCountInSameLevel"]}）`].join("\n")
+    return this.probe_summary
   }
 }
