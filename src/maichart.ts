@@ -13,9 +13,14 @@ var level_transform = (i: number) => {
   else return Math.floor(i)
 }
 
+export type chart_obj={
+  notes:number[],
+  charter:string
+}
+
 export default class {
   song: maisong
-  object: JSON
+  object: chart_obj
   difficulty: difficulty
   ds: number
   chart_summary: string
@@ -23,7 +28,7 @@ export default class {
   chart_summary_with_base: string
   note_summary: string
   probe_summary: string
-  constructor(object: JSON, song: maisong, difficulty: difficulty) {
+  constructor(object: chart_obj, song: maisong, difficulty: difficulty) {
     this.object = object
     this.song = song
     this.difficulty = difficulty
@@ -31,11 +36,11 @@ export default class {
     this.chart_summary = `${song.song_info_summary}[${difficulty_name[difficulty]}]`
     this.chart_summary_with_base = `${this.chart_summary}(${this.ds.toFixed(1)})`
     this.base_summary = `${difficulty_full_name[difficulty]} ${level_transform(this.ds)}(${this.ds.toFixed(1)})`
-    var note_list = [`TAP: ${object["notes"][0]}`, `HOLD: ${object["notes"][1]}`,
-    `SLIDE: ${object["notes"][2]}`]
-    note_list.push(`${song.is_sd ? "BREAK" : "TOUCH"}: ${object["notes"][3]}`)
-    if (!song.is_sd) note_list.push(`BREAK: ${object["notes"][4]}`)
-    note_list.push(`charter: ${object["charter"]}`)
+    var note_list = [`TAP: ${object.notes[0]}`, `HOLD: ${object.notes[1]}`,
+    `SLIDE: ${object.notes[2]}`]
+    note_list.push(`${song.is_sd ? "BREAK" : "TOUCH"}: ${object.notes[3]}`)
+    if (!song.is_sd) note_list.push(`BREAK: ${object.notes[4]}`)
+    note_list.push(`charter: ${object.charter}`)
     this.note_summary = note_list.join("\n")
   }
   async get_probe_data(ctx: Context) {

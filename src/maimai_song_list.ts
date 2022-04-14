@@ -1,6 +1,6 @@
 import { Context } from "koishi"
 import maichart from "./maichart"
-import maisong from "./maisong"
+import maisong, { song_obj } from "./maisong"
 
 export default class {
   jsonArray: JSON[]
@@ -14,7 +14,7 @@ export default class {
         this.chart_list = []
         this.list = []
         for (var i = 0; i < this.jsonArray.length; i++) {
-          var song = new maisong(this.jsonArray[i])
+          var song = new maisong(this.jsonArray[i] as object as song_obj)
           for (var j = 0; j <= (song.has_rem ? 4 : 3); j++)
             this.chart_list.push(song.charts[j])
           this.list.push(song)

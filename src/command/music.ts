@@ -30,14 +30,15 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
         }
       }
       //fork end
-      let song_info = maisonglist.id(id).object["basic_info"]
+
+      let song_info = maisonglist.id(id).object.basic_info
       var templates =[
-        `${song_info["title"]} ${song_info["artist"]} `,
-        `${song_info["title"]}`
+        `${song_info.title} ${song_info.artist} `,
+        `${song_info.title}`
       ]
       let a: { type: string; id: any; };
       for(let i of templates){
-        a=await netease(song_info["title"],i,ctx)
+        a=await netease(song_info.title,i,ctx)
         if(a!=undefined)break
       }
       if(a==undefined){
@@ -50,7 +51,7 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
   ctx.command("maimai")
     .subcommand(".music.alias <alias:text> 根据别名点歌。")
     .action(async (_, alias) => {
-      let songs = maisonglist.filt((i) => i.object["basic_info"]["title"].toLowerCase() == alias.toLowerCase())
+      let songs = maisonglist.filt((i) => i.object.basic_info.title.toLowerCase() == alias.toLowerCase())
       if (songs.length != 0) {
         return await ctx.command("maimai.music").execute({ args: [songs[0].id.toString()] })
       }

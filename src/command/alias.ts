@@ -10,7 +10,8 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
     .subcommand(".alias.get <id:number> 获取id对应乐曲的别名。")
     .action((argv, id) => {
       ctx.http("GET", "https://maimai.ohara-rinne.tech/api/alias/" + id).then((response) => {
-        argv.session.send(maisonglist.id(id).song_info_summary + "有如下别名：\n" + (<string[]><any>response["data"]).join("\n"))
+        argv.session.send(maisonglist.id(id).song_info_summary + "有如下别名：\n" +
+          (<string[]><any>response["data"]).join("\n"))
       })
     })
     .shortcut(/^([0-9]*)有什么别名$/, { args: ["$1"] })

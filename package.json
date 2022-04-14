@@ -1,43 +1,43 @@
 {
-    "name": "koishi-plugin-maimai",
-    "author": {
-        "name": "DrLee-lihr",
-        "email": "812403lihr@sina.com",
-        "url": "https://github.com/DrLee-lihr"
-    },
-    "description": "a koishi plugin for maimai(DX) players",
-    "private": false,
-    "version": "1.0.0",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/DrLee-lihr/koishi-plugin-maimai.git"
-    },
-    "bugs": "https://github.com/DrLee-lihr/koishi-plugin-maimai/issues",
-    "main": "lib/index.js",
-    "typings": "lib/index.d.ts",
-    "files": [
-        "lib",
-        "dist"
-    ],
-    "license": "Apache-2.0",
-    "scripts": {
-        "build": "tsc -b"
-    },
-    "keywords": [
-        "chatbot",
-        "koishi",
-        "plugin",
-        "maimai"
-    ],
-    "peerDependencies": {
-        "koishi": "^4.5.0"
-    },
-    "dependencies": {
-        "sharp": "^0.30.3",
-        "text-to-svg": "^3.1.5"
-    },
-    "devDependencies": {
-        "@types/sharp": "^0.30.1",
-        "@types/text-to-svg": "^3.1.1"
-    }
+  "name": "koishi-plugin-maimai",
+  "author": {
+    "name": "DrLee-lihr",
+    "email": "812403lihr@sina.com",
+    "url": "https://github.com/DrLee-lihr"
+  },
+  "description": "a koishi plugin for maimai(DX) players",
+  "private": false,
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DrLee-lihr/koishi-plugin-maimai.git"
+  },
+  "bugs": "https://github.com/DrLee-lihr/koishi-plugin-maimai/issues",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "keywords": [
+    "chatbot",
+    "koishi",
+    "plugin",
+    "maimai"
+  ],
+  "peerDependencies": {
+    "koishi": "^4.5.2"
+  },
+  "dependencies": {
+    "sharp": "^0.30.3",
+    "text-to-svg": "^3.1.5"
+  },
+  "devDependencies": {
+    "@types/sharp": "^0.30.2",
+    "@types/text-to-svg": "^3.1.1"
+  }
 }

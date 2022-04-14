@@ -18,11 +18,12 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
     .action(({ options }) => {
       var result = maisonglist.filt_chart((chart) => 
         ((options.level != "歌") ? (in_level(chart.ds, options.level)) : true) &&
-        (chart.song.object["basic_info"]["artist"].toLowerCase().includes(options.artist.toLowerCase())) &&
-        (chart.object["charter"].toLowerCase().includes(options.charter.toLowerCase())) &&
+        (chart.song.object.basic_info.title.toLowerCase().includes(options.artist.toLowerCase())) &&
+        (chart.object.charter.toLowerCase().includes(options.charter.toLowerCase())) &&
         (options.difficulty == "" ? true : (chart.difficulty == difficulty_trans_table[options.difficulty])) &&
         (options.type != "" ? ((chart.song.is_sd ? "标准" : "DX") == options.type) : true) &&
-        (options.version != "" ? (chart.song.object["basic_info"]["from"] == version_transform_table[options.version]) : true)
+        (options.version != "" ? (chart.song.object.basic_info.from 
+          == version_transform_table[options.version]) : true)
       )
       var chart = result[Math.floor(Math.random() * 10000) % result.length]
       return [`从${result.length}个符合条件的结果中随机：`, chart.chart_summary,
@@ -47,8 +48,9 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
     .option("version", "-v [version:string] 谱面版本。", { fallback: "" })
     .action(({ options }) => {
       var result = maisonglist.filt((song) => 
-        (song.object["basic_info"]["artist"].toLowerCase().includes(options.artist.toLowerCase())) &&
-        (options.version != "" ? (song.object["basic_info"]["from"] == version_transform_table[options.version]) : true)
+        (song.object.basic_info.artist.toLowerCase().includes(options.artist.toLowerCase())) &&
+        (options.version != "" ? (song.object.basic_info.from 
+          == version_transform_table[options.version]) : true)
       )
       var song = result[Math.floor(Math.random() * 10000) % result.length]
       return [`从${result.length}个符合条件的结果中随机：`, song.song_info_summary,

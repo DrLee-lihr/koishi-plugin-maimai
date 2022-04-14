@@ -42,7 +42,7 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
     .subcommand(".search <content:text> 根据给出的曲名查找曲目。")
     .action((_, content) => {
       var result: string[] = []
-      maisonglist.filt((i) => i.object["title"].toLowerCase().includes(content.toLowerCase()))
+      maisonglist.filt((i) => i.object.title.toLowerCase().includes(content.toLowerCase()))
         .forEach(element => {
           result.push(element.song_info_summary)
         })
@@ -58,7 +58,8 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
     .subcommand(".artist <artist:string> 搜索对应曲师的曲目。")
     .option("page", "-p [page:number] 当结果有多页时设定要输出的页码。", { fallback: 1 })
     .action(({ options }, artist) => {
-      var list = maisonglist.filt((i) => i.object["basic_info"]["artist"].toLowerCase().includes(artist.toLowerCase()))
+      var list = maisonglist.filt((i) => i.object.basic_info.artist
+        .toLowerCase().includes(artist.toLowerCase()))
       if (list.length == 0) return "未找到结果，请尝试使用曲师的名义原文本进行搜索。"
       var temp: string[] = []
       list.forEach((element) => { temp.push(element.song_info_summary) })
@@ -70,7 +71,8 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
     .subcommand(".charter <charter:string>  搜索对应谱师创作的谱面（定数降序排序）。")
     .option("page", "-p [page:number] 当结果有多页时设定要输出的页码。", { fallback: 1 })
     .action(({ options }, charter) => {
-      var list = maisonglist.filt_chart((i) => i.object["charter"].toLowerCase().includes(charter.toLowerCase()))
+      var list = maisonglist.filt_chart((i) => i.object.charter
+        .toLowerCase().includes(charter.toLowerCase()))
       if (list.length == 0) return "未找到结果，请尝试使用谱师的名义原文本进行搜索。"
       list.sort((a, b) => b.ds - a.ds)
       var temp: string[] = []
@@ -87,14 +89,15 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
     .action((_, bpm1, bpm2) => {
       if (bpm2 == undefined) {
         var result: string[] = []
-        maisonglist.filt((song) => song.object["basic_info"]["bpm"] == bpm1)
+        maisonglist.filt((song) => song.object.basic_info.bpm == bpm1)
           .forEach((element) => result.push(element.song_info_summary))
         return page_split(result, config)
       }
       else {
         var result: string[] = []
-        maisonglist.filt((song) => (song.object["basic_info"]["bpm"] >= bpm1 && song.object["basic_info"]["bpm"] <= bpm2) ||
-          (song.object["basic_info"]["bpm"] <= bpm1 && song.object["basic_info"]["bpm"] >= bpm2))
+        maisonglist.filt((song) => (song.object.basic_info.bpm >= bpm1 
+          && song.object.basic_info.bpm <= bpm2) ||
+          (song.object.basic_info.bpm <= bpm1 && song.object.basic_info.bpm >= bpm2))
           .forEach((element) => result.push(element.song_info_summary))
         return page_split(result, config)
       }
