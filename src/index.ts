@@ -8,6 +8,7 @@ import apply_mai_alias from './command/alias'
 import apply_mai_random from './command/random'
 import apply_mai_b40 from './command/b40'
 import apply_mai_music from './command/music'
+//import apply_mai_calculate from './command/calculate'
 
 
 export const name = 'maimai'
