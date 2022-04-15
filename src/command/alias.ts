@@ -1,4 +1,4 @@
-import { Context } from "koishi";
+import { Context, isType } from "koishi";
 import { Config } from "..";
 import maimai_song_list from "../maimai_song_list";
 import maisong from "../maisong";
@@ -26,23 +26,26 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
       catch (_) {
         return "结果过多，请尝试使用更准确的别名进行搜索。"
       }
-      switch (typeof (res)) {
+
+      switch (typeof res) {
         case 'undefined': {
           return "没有找到您想找的乐曲。"
         }
         case 'object': {
           try {
-            let f = (<maisong>res)
+            let f = res as maisong
+            if(f.is_sd==undefined)throw Error()
           }
           catch {
             let a = ["您要找的可能是以下曲目中的一首："];
-            (<any>res).forEach(element => {
+            (<any>res).forEach((element: { song_info_summary: string; }) => {
               a.push(element.song_info_summary)
             });
             return a.join("\n")
           }
-          return ["您要找的可能是：", (<maisong>res).song_info_summary, (<maisong>res).get_song_image(),
-            (<maisong>res).song_ds_summary].join("\n")
+          res =res as maisong
+          return ["您要找的可能是：", res.song_info_summary, res.get_song_image(),
+            res.song_ds_summary].join("\n")
         }
       }
     })
