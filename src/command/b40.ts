@@ -123,7 +123,6 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
     return base.toBuffer()
   }
 
-
   ctx.command("maimai")
     .subcommand(".b40 [username] 根据用户名/QQ号获取b40图片。")
     .action(async ({ session }, username) => {
@@ -132,9 +131,9 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
       return ctx.http.post("https://www.diving-fish.com/api/maimaidxprober/query/player",
         (username == undefined) ?
           { qq: session.userId } :
-          (username.match(/^\[CQ:at,id:([0-9]*)]$/) == null ?
-            { username: username } :
-            { qq: username.match(/^\[CQ:at,id:([0-9]*)]$/)[1] })
+          (/^\[CQ:at,id=([0-9]*)]$/.test(username) ?
+            { qq: username.match(/^\[CQ:at,id=([0-9]*)]$/)[1] } :
+            { username: username })
       )
         .then(async (result) => {
 
