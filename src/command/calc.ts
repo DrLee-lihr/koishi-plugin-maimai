@@ -14,7 +14,7 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
 
 
   ctx.command('maimai')
-    .subcommand('.calc <id:number> <difficulty:string> <achievement:number>')
+    .subcommand('.calc.achieve <id:number> <difficulty:string> <achievement:number>')
     .action((_, id, diff, achieve) => {
       
       let song = maisonglist.id(id)
@@ -41,5 +41,7 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
 
     })
     .shortcut('分数线',{fuzzy:true})
+
+    
 
 }
