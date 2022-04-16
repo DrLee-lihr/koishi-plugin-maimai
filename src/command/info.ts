@@ -86,12 +86,12 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
   ctx.command("maimai")
     .subcommand(".bpm <bpm1:number> [bpm2:number] 获取给定BPM的（或给定BPM区间内）的曲目。")
     .option("page", "-p [page:number] 当结果有多页时设定要输出的页码。", { fallback: 1 })
-    .action((_, bpm1, bpm2) => {
+    .action(({options}, bpm1, bpm2) => {
       if (bpm2 == undefined) {
         var result: string[] = []
         maisonglist.filt((song) => song.object.basic_info.bpm == bpm1)
           .forEach((element) => result.push(element.song_info_summary))
-        return page_split(result, config)
+        return page_split(result, config,options.page)
       }
       else {
         var result: string[] = []
@@ -99,7 +99,7 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
           && song.object.basic_info.bpm <= bpm2) ||
           (song.object.basic_info.bpm <= bpm1 && song.object.basic_info.bpm >= bpm2))
           .forEach((element) => result.push(element.song_info_summary))
-        return page_split(result, config)
+        return page_split(result, config,options.page)
       }
     })
 }
