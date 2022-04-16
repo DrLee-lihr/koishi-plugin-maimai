@@ -92,7 +92,7 @@ export default function (ctx: Context, config: Config, maisonglist: maimai_song_
       return [
         `定数： ${base}`,
         `达成率： ${ach}% ${res[1]}`,
-        `Rating = ${base}*${res[0]}*(${ach}/100) = ${Math.floor((base*res[0]*Math.min(ach,100.5)/100))}`
+        `Rating = ${base}*${res[0]}*(${Math.min(ach,100.5)}/100) = ${Math.floor((base*res[0]*Math.min(ach,100.5)/100))}`
       ].join('\n')
 
     })
