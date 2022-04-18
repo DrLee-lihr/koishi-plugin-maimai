@@ -1,17 +1,9 @@
 import { Context } from "koishi";
 import maisong from "./maisong";
+import { difficulty_name, difficulty_full_name, level_transform } from "./mai_tool";
 
 
 export type difficulty = 0 | 1 | 2 | 3 | 4
-
-
-var difficulty_name: string[] = ["BSC", "ADV", "EXP", "MAS", "ReM"]
-var difficulty_full_name: string[] = ["Basic", "Advanced", "Expert", "Master", "Re:Master"]
-var level_transform = (i: number) => {
-  if (i < 7) return Math.floor(i);
-  else if (i - Math.floor(i) > 0.65) return `${Math.floor(i)}+`
-  else return Math.floor(i)
-}
 
 export type chart_obj={
   notes:number[],

@@ -64,3 +64,11 @@ export var version_transform_table = {
   '华': 'maimai でらっくす Splash',
   '爽': 'maimai でらっくす Splash'
 }
+
+export var difficulty_name: string[] = ["BSC", "ADV", "EXP", "MAS", "ReM"]
+export var difficulty_full_name: string[] = ["Basic", "Advanced", "Expert", "Master", "Re:Master"]
+export var level_transform = (i: number) => {
+  if (i < 7) return Math.floor(i);
+  else if (i - Math.floor(i) > 0.65) return `${Math.floor(i)}+`
+  else return Math.floor(i)
+}
