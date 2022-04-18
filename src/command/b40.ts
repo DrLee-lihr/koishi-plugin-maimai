@@ -9,7 +9,7 @@ import { difficulty } from "../maichart";
 
 
 
-export default function (ctx: Context, config: Config, maisonglist: maimai_song_list) {
+export default function (ctx: Context, config: Config) {
 
   const resource_path = path.dirname(path.dirname(require.resolve('koishi-plugin-maimai'))) + '\\resources'
   const maimai_resource_path = `${resource_path}\\maimai`

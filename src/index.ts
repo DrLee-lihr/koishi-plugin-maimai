@@ -3,12 +3,12 @@ import { Context, Schema } from 'koishi'
 import maimai_song_list from "./maimai_song_list"
 
 //command modules
-import apply_mai_info from './command/info'
-import apply_mai_alias from './command/alias'
-import apply_mai_random from './command/random'
-import apply_mai_b40 from './command/b40'
-import apply_mai_music from './command/music'
-import apply_mai_calc from './command/calc'
+import mai_info from './command/info'
+import mai_alias from './command/alias'
+import mai_random from './command/random'
+import mai_b40 from './command/b40'
+import mai_music from './command/music'
+import mai_calc from './command/calc'
 
 
 export const name = 'maimai'
@@ -21,16 +21,18 @@ export const schema = Schema.object({
   alias_result_num_max: Schema.number().default(3).description("返回别名搜索结果时最多显示的结果数量。")
 })
 
+export var maisonglist:maimai_song_list
+
 
 export function apply(ctx: Context, config: Config) {
 
-  var maisonglist = new maimai_song_list(ctx)
+  maisonglist=new maimai_song_list(ctx)
   maisonglist.promise.then(() => {
-    apply_mai_info(ctx,config,maisonglist)
-    apply_mai_alias(ctx,config,maisonglist)
-    apply_mai_random(ctx,config,maisonglist)
-    apply_mai_b40(ctx,config,maisonglist)
-    apply_mai_music(ctx,config,maisonglist)
-    apply_mai_calc(ctx,config,maisonglist)
+    ctx.plugin(mai_info,config)
+    ctx.plugin(mai_alias,config)
+    ctx.plugin(mai_random,config)
+    ctx.plugin(mai_b40,config)
+    ctx.plugin(mai_music,config)
+    ctx.plugin(mai_calc,config)
   })
 }

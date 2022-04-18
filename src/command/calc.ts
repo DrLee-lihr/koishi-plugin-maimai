@@ -1,15 +1,12 @@
 import { Context } from "koishi";
-import { Config } from "..";
-import maimai_song_list from "../maimai_song_list";
+import { Config, maisonglist } from "..";
 import { get_difficulty_id } from "../mai_tool";
 
 
 
 
 
-export default function (ctx: Context, config: Config, maisonglist: maimai_song_list) {
-
-
+export default function (ctx: Context, config: Config) {
 
   ctx.command('maimai')
     .subcommand('.calc.achieve <id:number> <difficulty:string> <achievement:number> ')

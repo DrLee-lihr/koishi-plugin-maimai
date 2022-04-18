@@ -1,12 +1,11 @@
 import { Context } from "koishi";
-import { Config } from "..";
-import maimai_song_list from "../maimai_song_list";
+import { Config, maisonglist } from "..";
 import { get_difficulty_id, page_split } from "../mai_tool";
 
 
-export default function (ctx: Context, config: Config, maisonglist: maimai_song_list) {
+export default function (ctx: Context, config: Config) {
   ctx.command("maimai <id:number> [diff:string] 根据id或难度查询乐曲或谱面信息。")
-    .action(async (argv, id, diff) => {
+    .action(async (_, id, diff) => {
       var song = maisonglist.id(id)
       if (song == undefined) {
         return "未找到乐曲。"

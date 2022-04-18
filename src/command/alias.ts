@@ -1,10 +1,10 @@
-import { Context, isType } from "koishi";
-import { Config } from "..";
+import { Context } from "koishi";
+import { Config, maisonglist } from "..";
 import maimai_song_list from "../maimai_song_list";
 import maisong from "../maisong";
 
 
-export default function (ctx: Context, config: Config, maisonglist: maimai_song_list) {
+export default function (ctx: Context, config: Config) {
   
   ctx.command("maimai")
     .subcommand(".alias.get <id:number> 获取id对应乐曲的别名。")

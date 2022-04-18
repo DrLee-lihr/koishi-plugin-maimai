@@ -1,10 +1,9 @@
 import { Context } from "koishi";
-import { Config } from "..";
-import maimai_song_list from "../maimai_song_list";
+import { Config, maisonglist } from "..";
 import { in_level, difficulty_trans_table, version_transform_table } from "../mai_tool";
 
 
-export default function (ctx: Context, config: Config, maisonglist: maimai_song_list) {
+export default function (ctx: Context, config: Config) {
 
 
   ctx.command("maimai")
