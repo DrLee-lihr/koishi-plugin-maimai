@@ -9,6 +9,7 @@ import mai_random from './command/random'
 import mai_b40 from './command/b40'
 import mai_music from './command/music'
 import mai_calc from './command/calc'
+import mai_guess from './command/guess'
 
 
 export const name = 'maimai'
@@ -34,5 +35,6 @@ export function apply(ctx: Context, config: Config) {
     ctx.plugin(mai_b40,config)
     ctx.plugin(mai_music,config)
     ctx.plugin(mai_calc,config)
+    ctx.plugin(mai_guess,config)
   })
 }
