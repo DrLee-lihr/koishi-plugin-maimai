@@ -1,21 +1,34 @@
 import { Context } from "koishi";
 import maisong from "./maisong";
+import { difficulty_name, difficulty_full_name, level_transform } from "./mai_tool";
 
 
 export type difficulty = 0 | 1 | 2 | 3 | 4
 
-
-var difficulty_name: string[] = ["BSC", "ADV", "EXP", "MAS", "ReM"]
-var difficulty_full_name: string[] = ["Basic", "Advanced", "Expert", "Master", "Re:Master"]
-var level_transform = (i: number) => {
-  if (i < 7) return Math.floor(i);
-  else if (i - Math.floor(i) > 0.65) return `${Math.floor(i)}+`
-  else return Math.floor(i)
-}
-
 export type chart_obj={
   notes:number[],
   charter:string
+}
+
+
+type probe_data={
+  type:"SD"|'DX',
+  difficulty:string,
+  level:string,
+  innerLevel:number,
+  tap:number,
+  hold:number,
+  slide:number,
+  touch?:number,
+  total:number,
+  designer:string,
+  playerCount:number,
+  average:number,
+  tag:string,
+  difficultyRankInSameLevel:number,
+  songCountInSameLevel:number,
+  ssscount:number,
+  break:number
 }
 
 export default class {
@@ -28,6 +41,7 @@ export default class {
   chart_summary_with_base: string
   note_summary: string
   probe_summary: string
+  probe_data:probe_data
   constructor(object: chart_obj, song: maisong, difficulty: difficulty) {
     this.object = object
     this.song = song
@@ -46,7 +60,8 @@ export default class {
   async get_probe_data(ctx: Context) {
     if(this.probe_summary!=undefined)return this.probe_summary
     let response = await ctx.http("GET", `https://maimai.ohara-rinne.tech/api/chart/${this.song.id}/${this.difficulty}`)
-    var object = response["data"]
+    let object=response['data']
+    this.probe_data = response["data"] as probe_data
     this.probe_summary = [`tag:${object["tag"]}`,
     `共有${object["playerCount"]}名玩家游玩了该谱面，平均达成率：${object["average"]}`,
     `其中${object["ssscount"]}人（${Math.floor((object["ssscount"] / object["playerCount"]) * 10000) / 100}%）达成SSS`,

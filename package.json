@@ -31,7 +31,7 @@
         "maimai"
     ],
     "peerDependencies": {
-        "koishi": "^4.5.2"
+        "koishi": "^4.6.0"
     },
     "dependencies": {
         "sharp": "^0.30.3",

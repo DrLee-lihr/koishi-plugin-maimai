@@ -2,6 +2,14 @@ import { Config } from "."
 import { difficulty } from "./maichart"
 
 
+export const diff={
+  BASIC:0,
+  ADVANCED:1,
+  EXPERT:2,
+  MASTER:3,
+  REMASTER:4
+}
+
 var difficulty_id: (string | number)[][] = [
   [0, "绿", "bsc", "basic", "bas"],
   [1, "黄", "adv", "advanced"],
@@ -63,4 +71,12 @@ export var version_transform_table = {
   '熊': 'maimai でらっくす',
   '华': 'maimai でらっくす Splash',
   '爽': 'maimai でらっくす Splash'
+}
+
+export var difficulty_name: string[] = ["BSC", "ADV", "EXP", "MAS", "ReM"]
+export var difficulty_full_name: string[] = ["Basic", "Advanced", "Expert", "Master", "Re:Master"]
+export var level_transform = (i: number) => {
+  if (i < 7) return Math.floor(i);
+  else if (i - Math.floor(i) > 0.65) return `${Math.floor(i)}+`
+  else return Math.floor(i)
 }
