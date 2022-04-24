@@ -8,9 +8,9 @@ export default function (ctx: Context, config: Config) {
   
   ctx.command("maimai")
     .subcommand(".alias.get <id:number> 获取id对应乐曲的别名。")
-    .action((argv, id) => {
-      ctx.http("GET", "https://maimai.ohara-rinne.tech/api/alias/" + id).then((response) => {
-        argv.session.send(maisonglist.id(id).song_info_summary + "有如下别名：\n" +
+    .action(async (_, id) => {
+      return await ctx.http("GET", "https://maimai.ohara-rinne.tech/api/alias/" + id).then((response) => {
+        return (maisonglist.id(id).song_info_summary + "有如下别名：\n" +
           (<string[]><any>response["data"]).join("\n"))
       })
     })

@@ -26,6 +26,19 @@ export default function (ctx: Context, config: Config) {
     })
     .alias("m")
 
+  ctx.command('maimai')
+    .subcommand('.filt <filter:string> 根据给出的过滤器过滤曲目。',{authority:3})
+    .option('page','-p <page:number>',{fallback:1})
+    .action(({options},filter)=>{
+      try{
+      var list = maisonglist.filt(eval(filter))
+      }catch(e){return e.message}
+      if (list.length == 0) return "未找到结果。"
+      var temp: string[] = []
+      list.forEach((element) => { temp.push(element.song_info_summary) })
+      return page_split(temp, config, options.page)
+    })
+
   ctx.command("maimai")
     .subcommand(".base <base:number> 根据给出的定数查找曲目。")
     .action((_, base) => {

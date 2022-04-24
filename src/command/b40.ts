@@ -1,7 +1,6 @@
 import * as fs from "fs";
 import { Context, segment } from "koishi";
 import { Config } from "..";
-import maimai_song_list from "../maimai_song_list";
 import sharp from "sharp";
 import text_to_svg from "text-to-svg"
 import path from "path";
@@ -128,7 +127,7 @@ export default function (ctx: Context, config: Config) {
     .action(async ({ session }, username) => {
       session.send("处理中，请稍候……")
 
-      return ctx.http.post("https://www.diving-fish.com/api/maimaidxprober/query/player",
+      return await ctx.http.post("https://www.diving-fish.com/api/maimaidxprober/query/player",
         (username == undefined) ?
           { qq: session.userId } :
           (/^\[CQ:at,id=([0-9]*)]$/.test(username) ?
@@ -182,7 +181,7 @@ export default function (ctx: Context, config: Config) {
               )
             }
           }
-          session.send(segment.image(await background.composite(composite_list).toBuffer()))
+          return (segment.image(await background.composite(composite_list).toBuffer()))
 
         }).catch((e) => {
           console.log(e)
