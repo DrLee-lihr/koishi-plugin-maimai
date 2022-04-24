@@ -16,13 +16,13 @@ export default function (ctx: Context, config: Config) {
       MIT License
       https://github.com/koishijs/koishi-plugin-music
       */
-      async function netease(title:string,keyword:string,ctx:Context) {
+      async function netease(title: string, keyword: string, ctx: Context) {
         const data = await ctx.http.get('http://music.163.com/api/cloudsearch/pc', {
           params: { s: keyword, type: 1, offset: 0, limit: 1 },
         })
-        if(data.code !== 200||
-          data.result.songCount==0||
-          !data.result.songs[0].name.includes(title))return undefined
+        if (data.code !== 200 ||
+          data.result.songCount == 0 ||
+          !data.result.songs[0].name.includes(title)) return undefined
         return {
           type: '163',
           id: data.result.songs[0].id,
@@ -31,19 +31,19 @@ export default function (ctx: Context, config: Config) {
       //fork end
 
       let song_info = maisonglist.id(id).object.basic_info
-      var templates =[
+      var templates = [
         `${song_info.title} ${song_info.artist} `,
         `${song_info.title}`
       ]
       let a: { type: string; id: any; };
-      for(let i of templates){
-        a=await netease(song_info.title,i,ctx)
-        if(a!=undefined)break
+      for (let i of templates) {
+        a = await netease(song_info.title, i, ctx)
+        if (a != undefined) break
       }
-      if(a==undefined){
+      if (a == undefined) {
         return "点歌失败，请尝试更换平台或检查网络。"
       }
-      return segment('music',a)
+      return segment('music', a)
     })
 
 

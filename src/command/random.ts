@@ -15,13 +15,13 @@ export default function (ctx: Context, config: Config) {
     .option("type", "-t [type:string] 谱面类型（标准/DX）。", { fallback: "" })
     .option("version", "-v [version:string] 谱面版本。", { fallback: "" })
     .action(({ options }) => {
-      var result = maisonglist.filt_chart((chart) => 
-        (options.level == "歌"||in_level(chart.ds, options.level)) &&
+      var result = maisonglist.filt_chart((chart) =>
+        (options.level == "歌" || in_level(chart.ds, options.level)) &&
         (chart.song.object.basic_info.artist.toLowerCase().includes(options.artist.toLowerCase())) &&
         (chart.object.charter.toLowerCase().includes(options.charter.toLowerCase())) &&
         (options.difficulty == "" || (chart.difficulty == difficulty_trans_table[options.difficulty])) &&
-        (options.type == ""||((chart.song.is_sd ? "标准" : "DX") == options.type)) &&
-        (options.version == ""||(chart.song.object.basic_info.from == version_transform_table[options.version]))
+        (options.type == "" || ((chart.song.is_sd ? "标准" : "DX") == options.type)) &&
+        (options.version == "" || (chart.song.object.basic_info.from == version_transform_table[options.version]))
       )
       var chart = result[Math.floor(Math.random() * 10000) % result.length]
       return [`从${result.length}个符合条件的结果中随机：`, chart.chart_summary,
@@ -42,12 +42,12 @@ export default function (ctx: Context, config: Config) {
     .subcommand(".random.song 随机歌曲。")
     .option("artist", "-a [artist:string] 曲师。", { fallback: "" })
     .option("version", "-v [version:string] 谱面版本。", { fallback: "" })
-    .option('type','-t [type:string] 歌曲类型（标准/DX）。',{fallback:''})
+    .option('type', '-t [type:string] 歌曲类型（标准/DX）。', { fallback: '' })
     .action(({ options }) => {
-      var result = maisonglist.filt((song) => 
+      var result = maisonglist.filt((song) =>
         (song.object.basic_info.artist.toLowerCase().includes(options.artist.toLowerCase())) &&
-        (options.version== ""||(song.object.basic_info.from == version_transform_table[options.version]))&&
-        (options.type==''||options.type==(song.is_sd?'标准':'DX'))
+        (options.version == "" || (song.object.basic_info.from == version_transform_table[options.version])) &&
+        (options.type == '' || options.type == (song.is_sd ? '标准' : 'DX'))
       )
       var song = result[Math.floor(Math.random() * 10000) % result.length]
       return [`从${result.length}个符合条件的结果中随机：`, song.song_info_summary,
@@ -56,7 +56,7 @@ export default function (ctx: Context, config: Config) {
     .shortcut(/^.*mai什么.*$/)
     .shortcut(
       /^随个(?:([^写代0-9.+歌]*?)的)?(?:([^写的0-9.+歌])代的)?(标准|DX)?歌(?:[给要当].*)?$/,
-      { options: { artist: "$1", version: "$2", type: "$3"} })
+      { options: { artist: "$1", version: "$2", type: "$3" } })
     .example("今天mai什么")
     .example("随个Frums的白代歌")
 }

@@ -4,25 +4,25 @@ import maichart, { chart_obj, difficulty } from "./maichart"
 
 
 
-type basic_info={
-  title:string,
-  artist:string,
-  genre:string,
-  bpm:number,
-  release_date:string,
-  from:string,//version
-  is_new:boolean
+type basic_info = {
+  title: string,
+  artist: string,
+  genre: string,
+  bpm: number,
+  release_date: string,
+  from: string,//version
+  is_new: boolean
 }
 
-export type song_obj = { 
+export type song_obj = {
   id: string,
-  title: string, 
-  type: 'SD'|'DX', 
-  ds:number[], 
-  level: string[], 
-  cids:number[], 
+  title: string,
+  type: 'SD' | 'DX',
+  ds: number[],
+  level: string[],
+  cids: number[],
   charts: chart_obj[],
-  basic_info:basic_info
+  basic_info: basic_info
 }
 
 
@@ -47,14 +47,13 @@ export default class {
     object.ds.forEach((it: number) => k.push(it.toFixed(1)))
     this.song_ds_summary = k.join("/")
     this.basic_info_summary = [
-      `artist: ${object.basic_info.artist}`, 
+      `artist: ${object.basic_info.artist}`,
       `genre: ${object.basic_info.genre}`,
-      `bpm: ${object.basic_info.bpm}`, 
+      `bpm: ${object.basic_info.bpm}`,
       `version: ${object.basic_info.from}`].join("\n")
     this.charts = []
     for (var i: difficulty = 0; i < (this.has_rem ? 5 : 4); i++) {
-      var chart = new maichart(object.charts[i], this, <difficulty>i)
-      this.charts.push(chart)
+      this.charts.push(new maichart(object.charts[i], this, <difficulty>i))
     }
   }
   get_song_image() {

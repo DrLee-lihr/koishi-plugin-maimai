@@ -2,12 +2,12 @@ import { Config } from "."
 import { difficulty } from "./maichart"
 
 
-export const diff={
-  BASIC:0,
-  ADVANCED:1,
-  EXPERT:2,
-  MASTER:3,
-  REMASTER:4
+export const diff = {
+  BASIC: 0,
+  ADVANCED: 1,
+  EXPERT: 2,
+  MASTER: 3,
+  REMASTER: 4
 }
 
 var difficulty_id: (string | number)[][] = [

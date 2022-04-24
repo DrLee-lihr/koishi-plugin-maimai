@@ -22,19 +22,19 @@ export const schema = Schema.object({
   alias_result_num_max: Schema.number().default(3).description("返回别名搜索结果时最多显示的结果数量。")
 })
 
-export var maisonglist:maimai_song_list
+export var maisonglist: maimai_song_list
 
 
 export function apply(ctx: Context, config: Config) {
 
-  maisonglist=new maimai_song_list(ctx)
+  maisonglist = new maimai_song_list(ctx)
   maisonglist.promise.then(() => {
-    ctx.plugin(mai_info,config)
-    ctx.plugin(mai_alias,config)
-    ctx.plugin(mai_random,config)
-    ctx.plugin(mai_b40,config)
-    ctx.plugin(mai_music,config)
-    ctx.plugin(mai_calc,config)
-    ctx.plugin(mai_guess,config)
+    ctx.plugin(mai_info, config)
+    ctx.plugin(mai_alias, config)
+    ctx.plugin(mai_random, config)
+    ctx.plugin(mai_b40, config)
+    ctx.plugin(mai_music, config)
+    ctx.plugin(mai_calc, config)
+    ctx.plugin(mai_guess, config)
   })
 }

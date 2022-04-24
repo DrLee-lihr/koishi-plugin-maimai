@@ -5,7 +5,7 @@ import maisong from "../maisong";
 
 
 export default function (ctx: Context, config: Config) {
-  
+
   ctx.command("maimai")
     .subcommand(".alias.get <id:number> 获取id对应乐曲的别名。")
     .action(async (_, id) => {
@@ -34,7 +34,7 @@ export default function (ctx: Context, config: Config) {
         case 'object': {
           try {
             let f = res as maisong
-            if(f.is_sd==undefined)throw Error()
+            if (f.is_sd == undefined) throw Error()
           }
           catch {
             let a = ["您要找的可能是以下曲目中的一首："];
@@ -43,7 +43,7 @@ export default function (ctx: Context, config: Config) {
             });
             return a.join("\n")
           }
-          res =res as maisong
+          res = res as maisong
           return ["您要找的可能是：", res.song_info_summary, res.get_song_image(),
             res.song_ds_summary].join("\n")
         }
@@ -52,7 +52,7 @@ export default function (ctx: Context, config: Config) {
     .shortcut(/^(.*)是什么歌$/, { args: ["$1"] })
 }
 
-export async function alias_get(alias: string, ctx: Context, config:Config, maisonglist:maimai_song_list) {
+export async function alias_get(alias: string, ctx: Context, config: Config, maisonglist: maimai_song_list) {
   var response = await ctx.http("GET", encodeURI("https://maimai.ohara-rinne.tech/api/alias/query/" + alias))
   if (response["data"].length == 0) {
     return undefined

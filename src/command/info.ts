@@ -15,8 +15,8 @@ export default function (ctx: Context, config: Config) {
       }
       else {
         let chart = song.charts[get_difficulty_id(diff)]
-        let k=[song.song_info_summary,
-          song.get_song_image(), chart.base_summary, chart.note_summary]
+        let k = [song.song_info_summary,
+        song.get_song_image(), chart.base_summary, chart.note_summary]
         try {
           k.push(await chart.get_probe_data(ctx))
         }
@@ -27,12 +27,12 @@ export default function (ctx: Context, config: Config) {
     .alias("m")
 
   ctx.command('maimai')
-    .subcommand('.filt <filter:string> 根据给出的过滤器过滤曲目。',{authority:3})
-    .option('page','-p <page:number>',{fallback:1})
-    .action(({options},filter)=>{
-      try{
-      var list = maisonglist.filt(eval(filter))
-      }catch(e){return e.message}
+    .subcommand('.filt <filter:string> 根据给出的过滤器过滤曲目。', { authority: 3 })
+    .option('page', '-p <page:number>', { fallback: 1 })
+    .action(({ options }, filter) => {
+      try {
+        var list = maisonglist.filt(eval(filter))
+      } catch (e) { return e.message }
       if (list.length == 0) return "未找到结果。"
       var temp: string[] = []
       list.forEach((element) => { temp.push(element.song_info_summary) })
@@ -98,20 +98,20 @@ export default function (ctx: Context, config: Config) {
   ctx.command("maimai")
     .subcommand(".bpm <bpm1:number> [bpm2:number] 获取给定BPM的（或给定BPM区间内）的曲目。")
     .option("page", "-p [page:number] 当结果有多页时设定要输出的页码。", { fallback: 1 })
-    .action(({options}, bpm1, bpm2) => {
+    .action(({ options }, bpm1, bpm2) => {
       if (bpm2 == undefined) {
         var result: string[] = []
         maisonglist.filt((song) => song.object.basic_info.bpm == bpm1)
           .forEach((element) => result.push(element.song_info_summary))
-        return page_split(result, config,options.page)
+        return page_split(result, config, options.page)
       }
       else {
         var result: string[] = []
-        maisonglist.filt((song) => (song.object.basic_info.bpm >= bpm1 
+        maisonglist.filt((song) => (song.object.basic_info.bpm >= bpm1
           && song.object.basic_info.bpm <= bpm2) ||
           (song.object.basic_info.bpm <= bpm1 && song.object.basic_info.bpm >= bpm2))
           .forEach((element) => result.push(element.song_info_summary))
-        return page_split(result, config,options.page)
+        return page_split(result, config, options.page)
       }
     })
 }
