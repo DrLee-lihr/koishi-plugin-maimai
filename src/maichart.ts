@@ -50,22 +50,26 @@ export default class {
     this.chart_summary = `${song.song_info_summary}[${difficulty_name[difficulty]}]`
     this.chart_summary_with_base = `${this.chart_summary}(${this.ds.toFixed(1)})`
     this.base_summary = `${difficulty_full_name[difficulty]} ${level_transform(this.ds)}(${this.ds.toFixed(1)})`
+
     var note_list = [`TAP: ${object.notes[0]}`, `HOLD: ${object.notes[1]}`,
     `SLIDE: ${object.notes[2]}`]
     note_list.push(`${song.is_sd ? "BREAK" : "TOUCH"}: ${object.notes[3]}`)
     if (!song.is_sd) note_list.push(`BREAK: ${object.notes[4]}`)
     note_list.push(`charter: ${object.charter}`)
+    
     this.note_summary = note_list.join("\n")
   }
   async get_probe_data(ctx: Context) {
     if (this.probe_summary != undefined) return this.probe_summary
-    let response = await ctx.http("GET", `https://maimai.ohara-rinne.tech/api/chart/${this.song.id}/${this.difficulty}`)
-    let object = response['data']
-    this.probe_data = response["data"] as probe_data
-    this.probe_summary = [`tag:${object["tag"]}`,
-    `共有${object["playerCount"]}名玩家游玩了该谱面，平均达成率：${object["average"]}`,
-    `其中${object["ssscount"]}人（${Math.floor((object["ssscount"] / object["playerCount"]) * 10000) / 100}%）达成SSS`,
-    `SSS人数在同级别曲目中排名：（${object["difficultyRankInSameLevel"] + 1}/${object["songCountInSameLevel"]}）`].join("\n")
+
+    this.probe_data = (await ctx.http(
+      "GET", `https://maimai.ohara-rinne.tech/api/chart/${this.song.id}/${this.difficulty}`))["data"] as probe_data
+    this.probe_summary = [`tag:${this.probe_data.tag}`,
+    `共有${this.probe_data.playerCount}名玩家游玩了该谱面，平均达成率：${this.probe_data["average"]}`,
+    `其中${this.probe_data.ssscount}人（${
+      Math.floor((this.probe_data.ssscount / this.probe_data.playerCount) * 10000) / 100}%）达成SSS`,
+    `SSS人数在同级别曲目中排名：（${this.probe_data.difficultyRankInSameLevel + 1}`+
+      `/${this.probe_data.songCountInSameLevel}）`].join("\n")
     return this.probe_summary
   }
 }

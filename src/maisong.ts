@@ -1,4 +1,3 @@
-import { DiffieHellman } from "crypto"
 import { segment } from "koishi"
 import maichart, { chart_obj, difficulty } from "./maichart"
 
@@ -43,18 +42,13 @@ export default class {
     this.is_sd = object.type == "SD"
     this.type = object.type
     this.song_info_summary = `${this.id}.${object.title}(${this.type})`
-    var k: string[] = []
-    object.ds.forEach((it: number) => k.push(it.toFixed(1)))
-    this.song_ds_summary = k.join("/")
+    this.song_ds_summary = object.ds.map((i)=>i.toFixed(1)).join("/")
     this.basic_info_summary = [
       `artist: ${object.basic_info.artist}`,
       `genre: ${object.basic_info.genre}`,
       `bpm: ${object.basic_info.bpm}`,
       `version: ${object.basic_info.from}`].join("\n")
-    this.charts = []
-    for (var i: difficulty = 0; i < (this.has_rem ? 5 : 4); i++) {
-      this.charts.push(new maichart(object.charts[i], this, <difficulty>i))
-    }
+    this.charts = object.charts.map((element,index)=>new maichart(element, this, index as difficulty))
   }
   get_song_image() {
     return segment("image", { url: "https://www.diving-fish.com/covers/" + this.id + ".jpg" })

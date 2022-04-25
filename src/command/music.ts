@@ -64,7 +64,7 @@ export default function (ctx: Context, config: Config) {
         return "没有找到您想要的乐曲。"
       }
       try {
-        let f = <maisong>res
+        let f = (<maisong>res).id.toFixed(2)
       }
       catch {
         res = res[0]

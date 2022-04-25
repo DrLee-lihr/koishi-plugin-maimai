@@ -34,30 +34,22 @@ export default function (ctx: Context, config: Config) {
         var list = maisonglist.filt(eval(filter))
       } catch (e) { return e.message }
       if (list.length == 0) return "未找到结果。"
-      var temp: string[] = []
-      list.forEach((element) => { temp.push(element.song_info_summary) })
-      return page_split(temp, config, options.page)
+      return page_split(list.map((i) => i.song_info_summary), config, options.page)
     })
 
   ctx.command("maimai")
     .subcommand(".base <base:number> 根据给出的定数查找曲目。")
-    .action((_, base) => {
-      var result: string[] = []
+    .action((_, base) =>
       maisonglist.filt_chart((chart) => chart.ds == base)
-        .forEach(element => {
-          result.push(element.chart_summary_with_base)
-        })
-      return result.join("\n")
-    })
+        .map(element => element.chart_summary_with_base).join("\n")
+    )
 
   ctx.command("maimai")
     .subcommand(".search <content:text> 根据给出的曲名查找曲目。")
     .action((_, content) => {
-      var result: string[] = []
-      maisonglist.filt((i) => i.object.title.toLowerCase().includes(content.toLowerCase()))
-        .forEach(element => {
-          result.push(element.song_info_summary)
-        })
+      var result: string[] =
+        maisonglist.filt((i) => i.object.title.toLowerCase().includes(content.toLowerCase()))
+          .map(element => element.song_info_summary)
       if (result.length > config.result_num_max) {
         return `搜索结果过多（大于${config.result_num_max}条），请尝试使用更准确的内容进行搜索。`
       }
@@ -73,9 +65,7 @@ export default function (ctx: Context, config: Config) {
       var list = maisonglist.filt((i) => i.object.basic_info.artist
         .toLowerCase().includes(artist.toLowerCase()))
       if (list.length == 0) return "未找到结果，请尝试使用曲师的名义原文本进行搜索。"
-      var temp: string[] = []
-      list.forEach((element) => { temp.push(element.song_info_summary) })
-      return page_split(temp, config, options.page)
+      return page_split(list.map((i) => i.song_info_summary), config, options.page)
     })
 
 
@@ -87,9 +77,7 @@ export default function (ctx: Context, config: Config) {
         .toLowerCase().includes(charter.toLowerCase()))
       if (list.length == 0) return "未找到结果，请尝试使用谱师的名义原文本进行搜索。"
       list.sort((a, b) => b.ds - a.ds)
-      var temp: string[] = []
-      list.forEach((element) => { temp.push(element.chart_summary_with_base) })
-      return page_split(temp, config, options.page)
+      return page_split(list.map((i) => i.chart_summary_with_base), config, options.page)
     })
     .shortcut(/^我要大战([^\s]*)$/, { args: ["$1"] })
     .shortcut(/^我要大战([^\s]*) ([0-9]*)$/, { args: ["$1"], options: { page: "$2" } })
@@ -100,18 +88,18 @@ export default function (ctx: Context, config: Config) {
     .option("page", "-p [page:number] 当结果有多页时设定要输出的页码。", { fallback: 1 })
     .action(({ options }, bpm1, bpm2) => {
       if (bpm2 == undefined) {
-        var result: string[] = []
-        maisonglist.filt((song) => song.object.basic_info.bpm == bpm1)
-          .forEach((element) => result.push(element.song_info_summary))
-        return page_split(result, config, options.page)
+        return page_split(
+          maisonglist.filt((song) => song.object.basic_info.bpm == bpm1)
+            .map((element) => element.song_info_summary),
+          config, options.page)
       }
       else {
-        var result: string[] = []
-        maisonglist.filt((song) => (song.object.basic_info.bpm >= bpm1
-          && song.object.basic_info.bpm <= bpm2) ||
-          (song.object.basic_info.bpm <= bpm1 && song.object.basic_info.bpm >= bpm2))
-          .forEach((element) => result.push(element.song_info_summary))
-        return page_split(result, config, options.page)
+        if (bpm1 > bpm2) { let k = bpm1; bpm1 = bpm2; bpm2 = k; }
+        return page_split(
+          maisonglist.filt((song) => song.object.basic_info.bpm >= bpm1
+            && song.object.basic_info.bpm <= bpm2)
+            .map((element) => element.song_info_summary),
+          config, options.page)
       }
     })
 }
