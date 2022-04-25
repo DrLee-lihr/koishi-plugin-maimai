@@ -56,17 +56,16 @@ export default function (ctx: Context, config: Config) {
       session.sendQueued(['很遗憾，没有人答对。答案：', song.song_info_summary, song.get_song_image()].join('\n'), 40 * Time.second)
 
       let midware = ctx.middleware((session_1, next) => {
-        /*
-                let predicate = function (song_name: string, content: string) {
-                  if(/^[a-zA-Z]*$/.test(content)&&content.length>=5&&song_name.toLowerCase().includes(content.toLowerCase()))
-                    return true
-                  else if(content.length>=3&&song_name.toLowerCase().includes(content.toLowerCase()))return true
-                  else return false
-                }
-        */
+
+        let predicate = function (song_name: string, content: string) {
+          if (/^[a-zA-Z]{5,}$/.test(content) && song_name.toLowerCase().includes(content.toLowerCase())) return true
+          else if (content.length >= 3 && song_name.toLowerCase().includes(content.toLowerCase())) return true
+          else return false
+        }
+
         //todo: 优化判定逻辑
 
-        if (session_1.content == song.object.title) {
+        if (predicate(song.object.title,session_1.content)) {
           midware()
 
           //TODO: it doesn't work properly -> bug confirmed; waiting for fix
