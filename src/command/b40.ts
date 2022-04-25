@@ -155,7 +155,7 @@ export default function (ctx: Context, config: Config) {
             }
           ]
 
-          if (result.plate != '') {
+          if (result.plate != '' && result.plate != null) {
             composite_list.push({
               input: (await text2svgbuffer(result.plate, 160, false, false, 'black'
               )),
