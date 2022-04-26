@@ -63,8 +63,6 @@ export default function (ctx: Context, config: Config) {
           else return false
         }
 
-        //todo: 优化判定逻辑
-
         if (predicate(song.object.title,session_1.content)) {
           midware()
 
