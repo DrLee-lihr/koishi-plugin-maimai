@@ -10,6 +10,9 @@ import { difficulty } from "../maichart";
 
 export default function (ctx: Context, config: Config) {
 
+  if (!fs.existsSync('./cache/maimai'))  //希望不要deprecated 谢谢
+    fs.mkdirSync('./cache/maimai', { recursive: true })
+
   const resource_path = path.dirname(path.dirname(require.resolve('koishi-plugin-maimai'))) + '\\resources'
   const maimai_resource_path = `${resource_path}\\maimai`
 
@@ -56,20 +59,14 @@ export default function (ctx: Context, config: Config) {
     let base = sharp((fs.existsSync(cachePath)) ?
       fs.readFileSync(cachePath) :
       await (async () => {
-        let buffer
-        let apiURL = `https://www.diving-fish.com/covers/${id}.jpg`
-        try {
-          buffer = await ctx.http("GET", apiURL,
-          { responseType: "arraybuffer" });
-        } catch (err) {
-          console.log(`Error to GET: ${apiURL}`)
-        }
-        if(buffer !== undefined){
+        let response_failed = false
+        let buffer = await ctx.http("GET", `https://www.diving-fish.com/covers/${id}.jpg`,
+          { responseType: "arraybuffer" }).catch((_) => { response_failed = true; return undefined }) ??
+          fs.readFileSync(path.resolve(maimai_resource_path, "no_image.png"))
+        if (!response_failed) {
           (async (buffer: Buffer) => {
             fs.writeFileSync(cachePath, buffer)
           })(buffer)
-        }else{
-          buffer = fs.readFileSync(path.resolve(maimai_resource_path ,"no_image.png"))
         }
         return buffer
       })())
