@@ -18,7 +18,7 @@ var difficulty_id: (string | number)[][] = [
   [4, "白", "rem", "remaster", "re:master", "remas", "remst"]
 ]
 
-export function get_difficulty_id(s: string): difficulty { //todo:什么时候能把这个改一改 太不优雅了
+export function get_difficulty_id(s: string): difficulty { //TODO:什么时候能把这个改一改 太不优雅了
   var diffid = 3
   for (var i = 0; i <= 4; i++) {
     for (var j = 0; j < difficulty_id[i].length; j++) {
