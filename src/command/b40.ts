@@ -52,14 +52,25 @@ export default function (ctx: Context, config: Config) {
   async function draw_song(a: song_result, rank: number) {
 
     let id: number = a.song_id
-    let base = sharp((fs.existsSync(`./cache/maimai/${id}.jpg`)) ?
-      fs.readFileSync(`./cache/maimai/${id}.jpg`) :
+    let cachePath = path.resolve(`./cache/maimai/${id}.jpg`)
+    let base = sharp((fs.existsSync(cachePath)) ?
+      fs.readFileSync(cachePath) :
       await (async () => {
-        let buffer = await ctx.http("GET", `https://www.diving-fish.com/covers/${id}.jpg`,
+        let buffer
+        let apiURL = `https://www.diving-fish.com/covers/${id}.jpg`
+        try {
+          buffer = await ctx.http("GET", apiURL,
           { responseType: "arraybuffer" });
-        (async (buffer: Buffer) => {
-          fs.writeFileSync(`./cache/maimai/${id}.jpg`, buffer)
-        })(buffer)
+        } catch (err) {
+          console.log(`Error to GET: ${apiURL}`)
+        }
+        if(buffer !== undefined){
+          (async (buffer: Buffer) => {
+            fs.writeFileSync(cachePath, buffer)
+          })(buffer)
+        }else{
+          buffer = fs.readFileSync(path.resolve(maimai_resource_path ,"no_image.png"))
+        }
         return buffer
       })())
 
@@ -155,7 +166,7 @@ export default function (ctx: Context, config: Config) {
             }
           ]
 
-          if (result.plate != '') {
+          if (result.plate != '' && result.plate != null) {
             composite_list.push({
               input: (await text2svgbuffer(result.plate, 160, false, false, 'black'
               )),
