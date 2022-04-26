@@ -5,13 +5,13 @@ import { difficulty_name, difficulty_full_name, level_transform } from "./mai_to
 
 export type difficulty = 0 | 1 | 2 | 3 | 4
 
-export type chart_obj = {
+export interface chart_obj {
   notes: number[],
   charter: string
 }
 
 
-type probe_data = {
+interface probe_data {
   type: "SD" | 'DX',
   difficulty: string,
   level: string,

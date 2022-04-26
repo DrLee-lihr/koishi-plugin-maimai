@@ -3,7 +3,7 @@ import maichart, { chart_obj, difficulty } from "./maichart"
 
 
 
-type basic_info = {
+interface basic_info {
   title: string,
   artist: string,
   genre: string,
@@ -13,7 +13,7 @@ type basic_info = {
   is_new: boolean
 }
 
-export type song_obj = {
+export interface song_obj {
   id: string,
   title: string,
   type: 'SD' | 'DX',
