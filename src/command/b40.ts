@@ -56,20 +56,17 @@ export default function (ctx: Context, config: Config) {
 
     let id: number = a.song_id
     let cachePath = path.resolve(`./cache/maimai/${id}.jpg`)
-    let base = sharp((fs.existsSync(cachePath)) ?
-      fs.readFileSync(cachePath) :
-      await (async () => {
-        let request_failed = false
-        let buffer = await ctx.http("GET", `https://www.diving-fish.com/covers/${id}.jpg`,
-          { responseType: "arraybuffer" }).catch((_) => { request_failed = true; return undefined }) ??
-          fs.readFileSync(path.resolve(maimai_resource_path, "no_image.png"))
-        if (!request_failed) {
-          (async (buffer: Buffer) => {
-            fs.writeFileSync(cachePath, buffer)
-          })(buffer)
-        }
-        return buffer
-      })())
+    let base = sharp(
+      fs.existsSync(cachePath) ?
+        fs.readFileSync(cachePath) :
+        await (async () => {
+          return await ctx.http("GET", `https://www.diving-fish.com/covers/${id}.jpg`, { responseType: "arraybuffer" })
+            .then((buffer) => {
+              fs.writeFile(cachePath, buffer, () => { })
+              return buffer
+            })
+            .catch((_) => { return fs.readFileSync(path.resolve(maimai_resource_path, "no_image.png")) })
+        })())
 
     base = base.resize(200, 200).blur(10).modulate({ brightness: 0.9 })
 
