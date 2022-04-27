@@ -58,8 +58,14 @@ export default function (ctx: Context, config: Config) {
       let midware = ctx.middleware((session_1, next) => {
 
         let predicate = function (song_name: string, content: string) {
-          if (/^[a-zA-Z]{5,}$/.test(content) && song_name.toLowerCase().includes(content.toLowerCase())) return true
-          else if (content.length >= 3 && song_name.toLowerCase().includes(content.toLowerCase())) return true
+          if (/^[a-zA-Z]{5,}$/.test(content) &&
+            song_name.toLowerCase().includes(content.toLowerCase())
+            ) return true
+          else if (
+            !/^[a-zA-Z]*$/.test(content) &&
+            content.length >= 3 &&
+            song_name.toLowerCase().includes(content.toLowerCase()) 
+            ) return true
           else return false
         }
 
