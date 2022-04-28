@@ -1,5 +1,6 @@
 import { Context } from "koishi";
 import { Config, maisonglist } from "..";
+import maichart from "../maichart";
 import { get_difficulty_id, page_split } from "../mai_tool";
 
 
@@ -14,13 +15,9 @@ export default function (ctx: Context, config: Config) {
         return [song.song_info_summary, song.get_song_image(), song.song_ds_summary, song.basic_info_summary].join("\n")
       }
       else {
-        let chart = song.charts[get_difficulty_id(diff)]
+        let chart:maichart= song.charts[get_difficulty_id(diff)]
         let k = [song.song_info_summary,
-        song.get_song_image(), chart.base_summary, chart.note_summary]
-        try {
-          k.push(await chart.get_probe_data(ctx))
-        }
-        catch { }
+        song.get_song_image(), chart.base_summary, chart.note_summary, chart.stat_summary]
         return k.join('\n')
       }
     })

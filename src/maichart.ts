@@ -10,25 +10,17 @@ export interface chart_obj {
   charter: string
 }
 
-
-interface probe_data {
-  type: "SD" | 'DX',
-  difficulty: string,
-  level: string,
-  innerLevel: number,
-  tap: number,
-  hold: number,
-  slide: number,
-  touch?: number,
-  total: number,
-  designer: string,
-  playerCount: number,
-  average: number,
-  tag: string,
-  difficultyRankInSameLevel: number,
-  songCountInSameLevel: number,
-  ssscount: number,
-  break: number
+export interface chart_stat {
+  count: number,
+  avg: number,
+  sssp_count: number,
+  tag: 'Very Easy' | 'Easy' | 'Medium' | 'Hard' | 'Very Hard',
+  v: number,
+  t: number
+}
+export type song_stat = [chart_stat, chart_stat, chart_stat, chart_stat, chart_stat | {}]
+export interface chart_stats {
+  [k: number]: song_stat
 }
 
 export default class {
@@ -40,9 +32,9 @@ export default class {
   base_summary: string
   chart_summary_with_base: string
   note_summary: string
-  probe_summary: string
-  probe_data: probe_data
-  constructor(object: chart_obj, song: maisong, difficulty: difficulty) {
+  stat:chart_stat
+  stat_summary:string
+  constructor(object: chart_obj, song: maisong, difficulty: difficulty, stat:chart_stat) {
     this.object = object
     this.song = song
     this.difficulty = difficulty
@@ -56,20 +48,15 @@ export default class {
     note_list.push(`${song.is_sd ? "BREAK" : "TOUCH"}: ${object.notes[3]}`)
     if (!song.is_sd) note_list.push(`BREAK: ${object.notes[4]}`)
     note_list.push(`charter: ${object.charter}`)
-    
-    this.note_summary = note_list.join("\n")
-  }
-  async get_probe_data(ctx: Context) {
-    if (this.probe_summary != undefined) return this.probe_summary
 
-    this.probe_data = (await ctx.http(
-      "GET", `https://maimai.ohara-rinne.tech/api/chart/${this.song.id}/${this.difficulty}`))["data"] as probe_data
-    this.probe_summary = [`tag:${this.probe_data.tag}`,
-    `共有${this.probe_data.playerCount}名玩家游玩了该谱面，平均达成率：${this.probe_data["average"]}`,
-    `其中${this.probe_data.ssscount}人（${
-      Math.floor((this.probe_data.ssscount / this.probe_data.playerCount) * 10000) / 100}%）达成SSS`,
-    `SSS人数在同级别曲目中排名：（${this.probe_data.difficultyRankInSameLevel + 1}`+
-      `/${this.probe_data.songCountInSameLevel}）`].join("\n")
-    return this.probe_summary
+    this.note_summary = note_list.join("\n")
+
+    this.stat=stat
+    this.stat_summary=[
+      `tag:${stat.tag}`,
+      `共有${stat.count}名玩家游玩了该谱面，平均达成率：${stat.avg}`,
+      `其中${stat.sssp_count}人（${Math.floor((stat.sssp_count / stat.count) * 10000) / 100}%）达成 SSS`,
+      `SSS人数在同级别曲目中排名：（${stat.v + 1}/${stat.t}`
+    ].join("\n")
   }
 }

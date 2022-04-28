@@ -21,8 +21,6 @@ export default function (ctx: Context, config: Config) {
       catch { return '参数错误。' }
       if (well_known_list == []) return '没有结果。'
       let song = well_known_list[Math.floor(Math.random() * 20000) % well_known_list.length]
-      await song.charts[diff.MASTER].get_probe_data(ctx)
-      if (song.has_rem) await song.charts[diff.REMASTER].get_probe_data(ctx)
 
       let info_list = [
         `这首曲目${song.has_rem ? '' : '没'}有白谱`,
@@ -30,7 +28,7 @@ export default function (ctx: Context, config: Config) {
         `这首曲目紫谱定级是 ${level_transform(song.object.ds[diff.MASTER])}`,
         `这首曲目紫谱的谱师是 ${song.charts[diff.MASTER].object.charter}`,
         `这首曲目紫谱的绝赞个数是 ${song.charts[diff.MASTER].object.notes[song.is_sd ? 3 : 4]}`,
-        `这首曲目紫谱在查分器中的 Tag 是 ${song.charts[diff.MASTER].probe_data.tag}`,
+        `这首曲目紫谱在查分器中的 Tag 是 ${song.charts[diff.MASTER].stat.tag}`,
         `这首曲目属于 ${song.object.basic_info.genre} 分区`,
         `这首曲目属于 ${song.object.basic_info.from} 版本`,
         `这首曲目的 BPM 是 ${song.object.basic_info.bpm}`,
@@ -42,7 +40,7 @@ export default function (ctx: Context, config: Config) {
           `这首曲目白谱定级是 ${level_transform(song.object.ds[diff.REMASTER])}`,
           `这首曲目白谱的谱师是 ${song.charts[diff.REMASTER].object.charter}`,
           `这首曲目白谱的绝赞个数是 ${song.charts[diff.REMASTER].object.notes[song.is_sd ? 3 : 4]}`,
-          `这首曲目白谱在查分器中的 Tag 是 ${song.charts[diff.REMASTER].probe_data.tag}`,
+          `这首曲目白谱在查分器中的 Tag 是 ${song.charts[diff.REMASTER].stat.tag}`,
           `这首曲目的白谱定数为 ${song.object.ds[diff.REMASTER]}`,
         )
       }
