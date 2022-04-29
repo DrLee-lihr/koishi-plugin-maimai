@@ -51,26 +51,26 @@ export default function (ctx: Context, config: Config) {
         info_list.splice(index, 1)
         session.sendQueued(`${i}/7 ` + info, 20 * Time.second)
       });
-      session.sendQueued(['很遗憾，没有人答对。答案：', song.song_info_summary, song.get_song_image()].join('\n'), 40 * Time.second)
+      session.sendQueued(['很遗憾，没有人答对。答案：', song.song_info_summary, song.get_song_image()].join('\n'),
+        40 * Time.second)
 
       let midware = ctx.middleware((session_1, next) => {
 
-        let predicate = function (song_name: string, content: string) {
-          if (/^[a-zA-Z]{5,}$/.test(content) &&
+        let judge = function (song_name: string, content: string) {
+          if (RegExp(`^[a-zA-Z]{${Math.min(5, song.object.title.length)},}$`).test(content) &&
             song_name.toLowerCase().includes(content.toLowerCase())
-            ) return true
+          ) return true
           else if (
-            !/^[a-zA-Z]*$/.test(content) &&
-            content.length >= 3 &&
-            song_name.toLowerCase().includes(content.toLowerCase()) 
-            ) return true
+            !RegExp(`^[a-zA-Z]{${Math.min(3, song.object.title.length)},}$`).test(content) &&
+            song_name.toLowerCase().includes(content.toLowerCase())
+          ) return true
           else return false
         }
 
-        if (predicate(song.object.title,session_1.content)) {
+        if (judge(song.object.title, session_1.content)) {
           midware()
 
-          //TODO: it doesn't work properly -> bug confirmed; waiting for fix
+          //FIXME: it doesn't work properly -> bug confirmed; waiting for fix
           session.cancelQueued()
 
           return [s('at', { id: session_1.userId }) + ' 恭喜你答对了！', `答案：${song.song_info_summary}`,
