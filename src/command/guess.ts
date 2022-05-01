@@ -9,14 +9,14 @@ export default function (ctx: Context, config: Config) {
 
   ctx.command('maimai')
     .subcommand('.guess 发起 maimai 猜歌。')
-    .option('filt', '-f <filter:string> 给出一个要过滤的曲目的过滤器。', { authority: 3 })
+    .option('filter', '-f <filter:string> 给出一个要过滤的曲目的过滤器。', { authority: 3 })
     .action(async ({ session, options }) => {
       session.send('猜歌开始，接下来我将依次给出7个条件，请你根据条件猜出这首歌的名字。\n英文至少五个字母匹配，其他最少三个字匹配。')
 
-      let well_known_list = maisonglist.filt((i) => (i.has_rem && i.object.ds[diff.REMASTER] >= 13) ||
+      let well_known_list = maisonglist.filter((i) => (i.has_rem && i.object.ds[diff.REMASTER] >= 13) ||
         i.object.ds[diff.MASTER] >= 13)
       try {
-        if (options.filt != undefined) well_known_list = maisonglist.list.filter(eval(options.filt))
+        if (options.filter != undefined) well_known_list = maisonglist.list.filter(eval(options.filter))
       }
       catch { return '参数错误。' }
       if (well_known_list == []) return '没有结果。'

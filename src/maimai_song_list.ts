@@ -21,12 +21,12 @@ export default class {
   }
   id(id: number|string) {
     if(typeof id=='string')id=Number.parseInt(id)
-    return this.filt((s: maisong) => s.id == id)[0]
+    return this.filter((s: maisong) => s.id == id)[0]
   }
-  filt(filter: (i: maisong) => boolean){
+  filter(filter: (i: maisong) => boolean){
     return this.list.filter(filter)
   }
-  filt_chart(filter: (i: maichart) => boolean) {
+  filter_chart(filter: (i: maichart) => boolean) {
     return this.chart_list.filter(filter)
   }
 }

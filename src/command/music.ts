@@ -50,7 +50,7 @@ export default function (ctx: Context, config: Config) {
   ctx.command("maimai")
     .subcommand(".music.alias <alias:text> 根据别名点歌。")
     .action(async (_, alias) => {
-      let songs = maisonglist.filt((i) => i.object.basic_info.title.toLowerCase() == alias.toLowerCase())
+      let songs = maisonglist.filter((i) => i.object.basic_info.title.toLowerCase() == alias.toLowerCase())
       if (songs.length != 0) {
         return await ctx.command("maimai.music").execute({ args: [songs[0].id.toString()] })
       }

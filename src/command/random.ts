@@ -15,7 +15,7 @@ export default function (ctx: Context, config: Config) {
     .option("type", "-t [type:string] 谱面类型（标准/DX）。", { fallback: "" })
     .option("version", "-v [version:string] 谱面版本。", { fallback: "" })
     .action(({ options }) => {
-      var result = maisonglist.filt_chart((chart) =>
+      var result = maisonglist.filter_chart((chart) =>
         (options.level == "歌" || in_level(chart.ds, options.level)) &&
         (chart.song.object.basic_info.artist.toLowerCase().includes(options.artist.toLowerCase())) &&
         (chart.object.charter.toLowerCase().includes(options.charter.toLowerCase())) &&
@@ -44,7 +44,7 @@ export default function (ctx: Context, config: Config) {
     .option("version", "-v [version:string] 谱面版本。", { fallback: "" })
     .option('type', '-t [type:string] 歌曲类型（标准/DX）。', { fallback: '' })
     .action(({ options }) => {
-      var result = maisonglist.filt((song) =>
+      var result = maisonglist.filter((song) =>
         (song.object.basic_info.artist.toLowerCase().includes(options.artist.toLowerCase())) &&
         (options.version == "" || (song.object.basic_info.from == version_transform_table[options.version])) &&
         (options.type == '' || options.type == (song.is_sd ? '标准' : 'DX'))
