@@ -1,11 +1,43 @@
 import * as fs from "fs";
-import { Context, segment } from "koishi";
+import { Context, segment, Session } from "koishi";
 import { Config } from "..";
 import sharp from "sharp";
 import text_to_svg from "text-to-svg"
 import path from "path";
 import { difficulty } from "../maichart";
+import { maimai_resource_path, tts, tts_fira } from "../mai_tool";
 
+
+type player_data = {
+  additional_rating:number,
+  charts:{
+    dx:song_result[],
+    sd:song_result[],
+  }
+  nickname?:string,
+  plate?:string,
+  rating:number,
+  user_data?,
+  user_id?,
+  username:string
+}
+type fc = 'fc' | 'fcp' | 'ap' | 'app' | ''
+type fs = 'fs' | 'fsp' | 'fsd' | 'fsdp' | ''
+export type song_result = {
+  achievements: number,
+  ds: number,
+  dxScore: number,
+  fc: fc,
+  fs: fs,
+  level: string,
+  level_index: difficulty,
+  level_label: 'BASIC' | 'ADVANCED' | 'EXPERT' | 'MASTER' | 'Re:MASTER',
+  ra: number,
+  rate: 'd' | 'c' | 'b' | 'bb' | 'bbb' | 'a' | 'aa' | 'aaa' | 's' | 'sp' | 'ss' | 'ssp' | 'sss' | 'sssp',
+  song_id: number,
+  title: string,
+  type: "DX" | "SD"
+}
 
 
 export default function (ctx: Context, config: Config) {
@@ -13,29 +45,10 @@ export default function (ctx: Context, config: Config) {
   if (!fs.existsSync('./cache/maimai'))  //希望不要deprecated 谢谢
     fs.mkdirSync('./cache/maimai', { recursive: true })
 
-  const resource_path = path.dirname(path.dirname(require.resolve('koishi-plugin-maimai'))) + '\\resources'
-  const maimai_resource_path = `${resource_path}\\maimai`
+  
 
-  type fc = 'fc' | 'fcp' | 'ap' | 'app' | ''
-  type fs = 'fs' | 'fsp' | 'fsd' | 'fsdp' | ''
-  type song_result = {
-    achievements: number,
-    ds: number,
-    dxScore: number,
-    fc: fc,
-    fs: fs,
-    level: string,
-    level_index: difficulty,
-    level_label: 'BASIC' | 'ADVANCED' | 'EXPERT' | 'MASTER' | 'Re:MASTER',
-    ra: number,
-    rate: 'd' | 'c' | 'b' | 'bb' | 'bbb' | 'a' | 'aa' | 'aaa' | 's' | 'sp' | 'ss' | 'ssp' | 'sss' | 'sssp',
-    song_id: number,
-    title: string,
-    type: "DX" | "SD"
-  }
 
-  const tts_sync_fira = text_to_svg.loadSync(resource_path + '\\FiraCode-Medium.ttf')
-  const tts_sync = text_to_svg.loadSync()
+  
   async function text2svgbuffer(text: string, size: number, use_fira = true, use_extract = true,
     color = 'white') {
 
@@ -44,8 +57,7 @@ export default function (ctx: Context, config: Config) {
         fontSize: size, anchor: 'left top', attributes: { fill: color }
       })))
     }
-
-    let text_img = gener_img(use_fira ? tts_sync_fira : tts_sync)
+    let text_img = gener_img(use_fira ? tts_fira : tts)
 
     if (use_extract && (await text_img.metadata()).width > 190)
       return text_img.extract({ left: 0, top: 0, height: size, width: 200 }).toBuffer()
@@ -130,15 +142,9 @@ export default function (ctx: Context, config: Config) {
     .subcommand(".b40 [username] 根据用户名/QQ号获取b40图片。")
     .action(async ({ session }, username) => {
       session.send("处理中，请稍候……")
-
-      return await ctx.http.post("https://www.diving-fish.com/api/maimaidxprober/query/player",
-        (username == undefined) ?
-          { qq: session.userId } :
-          (/^\[CQ:at,id=([0-9]*)]$/.test(username) ?
-            { qq: username.match(/^\[CQ:at,id=([0-9]*)]$/)[1] } :
-            { username: username })
-      )
-        .then(async (result) => {
+      
+      return await query_player(session,username,ctx)
+        .then(async (result:player_data) => {
 
           let background = sharp(`${maimai_resource_path}\\b40.png`)
 
@@ -153,7 +159,7 @@ export default function (ctx: Context, config: Config) {
             },
             {
               input: (await text2svgbuffer(
-                result["nickname"], 80, true, false, 'black'
+                result.nickname??result.username, 80, true, false, 'black'
               )),
               left: 400, top: 100
             }
@@ -192,6 +198,19 @@ export default function (ctx: Context, config: Config) {
           if (e.message == 'Request failed with status code 400') return '用户未找到，请确保'
             + (username == undefined ? '用户已在查分器中绑定QQ号。' : '输入的用户名正确。')
           if (e.message == 'Request failed with status code 403') return '该用户禁止了其他人获取数据。'
+          else return e.message
         })
     })
+}
+
+export async function query_player(session:Session,username:string,ctx:Context):Promise<player_data>{
+  let data: { qq: string } | { username: string }
+  if (username != undefined) {
+    data = (session.platform == 'onebot' && /^\[CQ:at,id=([0-9]*)]$/.test(username)) ?
+      { qq: username.match(/^\[CQ:at,id=([0-9]*)]$/)[1] } :
+      { username: username }
+  }
+  else if (session.platform != 'onebot') throw Error('请输入正确的用户名。')
+  else data = { qq: session.userId }
+  return await ctx.http.post('https://www.diving-fish.com/api/maimaidxprober/query/player',data)
 }

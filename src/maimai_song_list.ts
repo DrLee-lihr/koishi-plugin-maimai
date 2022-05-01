@@ -19,7 +19,8 @@ export default class {
       }
     )
   }
-  id(id: number) {
+  id(id: number|string) {
+    if(typeof id=='string')id=Number.parseInt(id)
     return this.filt((s: maisong) => s.id == id)[0]
   }
   filt(filter: (i: maisong) => boolean){

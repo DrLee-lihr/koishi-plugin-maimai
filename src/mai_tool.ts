@@ -1,6 +1,14 @@
+import path from "path"
 import { Config } from "."
 import { difficulty } from "./maichart"
+import text_to_svg from "text-to-svg"
 
+
+export const resource_path = path.dirname(path.dirname(require.resolve('koishi-plugin-maimai'))) + '\\resources'
+export const maimai_resource_path = `${resource_path}\\maimai`
+
+export const tts_fira = text_to_svg.loadSync(resource_path + '\\FiraCode-Medium.ttf')
+export const tts = text_to_svg.loadSync()
 
 export const diff = {
   BASIC: 0,
@@ -42,7 +50,8 @@ export function in_level(pred: number, level: string) {
   else return Number.parseInt(level) - 0.05 <= pred && pred <= Number.parseInt(level) + 0.65
 }
 
-export function page_split(list: string[], config: Config, page_num: number = 1) {
+export function page_split(list: string[], config: Config, page_num: number = 1,
+  result_prefix='查询结果：') {
   var page = page_num == undefined ? 0 : page_num - 1
   var list_num = Math.floor(list.length / config.result_num_max) + ((list.length % config.result_num_max) == 0 ? 0 : 1)
   if (list_num <= page || page < 0)
@@ -52,7 +61,7 @@ export function page_split(list: string[], config: Config, page_num: number = 1)
     if (i >= list.length) break
     temp.push(list[i])
   }
-  return `查询结果：\n${temp.join("\n")}\n第${page + 1}页，共${list_num}页`
+  return `${result_prefix}\n${temp.join("\n")}\n第${page + 1}页，共${list_num}页`
 }
 
 export var version_transform_table = {

@@ -32,13 +32,15 @@ export function apply(ctx: Context, config: Config) {
 
   maisonglist = new maimai_song_list(ctx)
   maisonglist.promise.then(() => {
-    ctx.plugin(mai_info, config)
-    ctx.plugin(mai_alias, config)
-    ctx.plugin(mai_random, config)
-    ctx.plugin(mai_b40, config)
-    ctx.plugin(mai_music, config)
-    ctx.plugin(mai_calc, config)
-    ctx.plugin(mai_guess, config)
-    ctx.plugin(mai_record,config)
+    [
+      mai_info,
+      mai_alias,
+      mai_random,
+      mai_b40,
+      mai_music,
+      mai_calc,
+      mai_guess,
+      mai_record
+    ].forEach(i => ctx.plugin(i, config))
   })
 }
