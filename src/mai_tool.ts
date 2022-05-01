@@ -69,8 +69,9 @@ export var version_transform_table = {
   '雪': 'MiLK PLUS',
   '辉': 'maimai FiNALE',
   '熊': 'maimai でらっくす',
-  '华': 'maimai でらっくす Splash',
-  '爽': 'maimai でらっくす Splash'
+  '华': 'maimai でらっくす',
+  '爽': 'maimai でらっくす Splash',
+  '煌': 'maimai でらっくす Splash',
 }
 
 export var difficulty_name: string[] = ["BSC", "ADV", "EXP", "MAS", "ReM"]
