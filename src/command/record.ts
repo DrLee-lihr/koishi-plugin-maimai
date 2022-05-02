@@ -56,9 +56,10 @@ export default function record(ctx: Context, config: Config) {
         .sort((a,b)=>b.achievements-a.achievements)
 
       let text = processed_page_split<record>(
-        list, config, options.page, `${username??session.username} 的 ${level} 分数列表：`,
+        list, config, options.page, 
         v => `${v.achievements}% ` +
-            maisonglist.id(v.id).charts[v.level_index].chart_summary_with_base
+            maisonglist.id(v.id).charts[v.level_index].chart_summary_with_base,
+        `${username??session.username} 的 ${level} 分数列表：`
         )
       
       

@@ -64,8 +64,8 @@ export function page_split(list: string[], config: Config, page_num: number = 1,
   return `${result_prefix}\n${temp.join("\n")}\n第${page + 1}页，共${list_num}页`
 }
 
-export function processed_page_split<T>(list: T[], config: Config, page_num: number = 1,
-  result_prefix='查询结果：',mapper:(v:T)=>string) {
+export function processed_page_split<T>(list: T[], config: Config, page_num: number = 1,mapper:(v:T)=>string,
+  result_prefix='查询结果：') {
   var page = page_num == undefined ? 0 : page_num - 1
   var list_num = Math.floor(list.length / config.result_num_max) + ((list.length % config.result_num_max) == 0 ? 0 : 1)
   if (list_num <= page || page < 0)
