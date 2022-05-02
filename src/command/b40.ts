@@ -21,8 +21,8 @@ type player_data = {
   user_id?,
   username:string
 }
-type fc = 'fc' | 'fcp' | 'ap' | 'app' | ''
-type fs = 'fs' | 'fsp' | 'fsd' | 'fsdp' | ''
+export type fc = 'fc' | 'fcp' | 'ap' | 'app' | ''
+export type fs = 'fs' | 'fsp' | 'fsd' | 'fsdp' | ''
 export type song_result = {
   achievements: number,
   ds: number,
