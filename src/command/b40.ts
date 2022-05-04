@@ -45,10 +45,6 @@ export default function (ctx: Context, config: Config) {
   if (!fs.existsSync('./cache/maimai'))  //希望不要deprecated 谢谢
     fs.mkdirSync('./cache/maimai', { recursive: true })
 
-  
-
-
-  
   async function text2svgbuffer(text: string, size: number, use_fira = true, use_extract = true,
     color = 'white') {
 

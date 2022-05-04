@@ -1,7 +1,9 @@
 import path from "path"
-import { Config } from "."
+import { Config, maisonglist } from "."
 import { difficulty } from "./maichart"
 import text_to_svg from "text-to-svg"
+import maisong from "./maisong"
+import { alias_get } from "./command/alias"
 
 
 export const resource_path = path.dirname(path.dirname(require.resolve('koishi-plugin-maimai'))) + '\\resources'
@@ -50,7 +52,23 @@ export function in_level(pred: number, level: string) {
   else return Number.parseInt(level) - 0.05 <= pred && pred <= Number.parseInt(level) + 0.65
 }
 
+/**
+ * 分页消息
+ * @param list 要分页的字符串列表
+ * @param config 插件设置项
+ * @param page_num 获取的页的页码
+ * @param result_prefix 结果前缀信息
+ */
 export function page_split(list: string[], config: Config, page_num: number, result_prefix?: string):string
+
+/**
+ * 分页消息（经处理）
+ * @param list 要分页的对象列表
+ * @param config 插件设置项
+ * @param page_num 获取的页的页码
+ * @param result_prefix 结果前缀信息
+ * @param converter 把对象转成字符串的函数
+ */
 export function page_split<T>(list: T[], config: Config, page_num: number, result_prefix: string,
   converter: (v: T) => string):string
 
@@ -71,7 +89,24 @@ export function page_split<T = string>(list: string[] | T[], config: Config, pag
   }
 }
 
-
+export function identify(identifier:string):maisong{
+  let result:maisong
+  let id:number
+  try{
+    id=Number.parseInt(identifier)
+    result=maisonglist.id(id)
+    if(result==undefined)throw Error()
+    else return result
+  }
+  catch{
+    let res=maisonglist.filter(v=>v.object.title==identifier)
+    if(res.length!=0)return res[0]
+    else{
+      alias_get()
+    }
+  }
+  
+}
 
 export var version_transform_table = {
   '真': 'maimai PLUS',

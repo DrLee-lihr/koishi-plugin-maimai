@@ -21,7 +21,9 @@ export default class {
   }
   id(id: number|string) {
     if(typeof id=='string')id=Number.parseInt(id)
-    return this.filter((s: maisong) => s.id == id)[0]
+    let res=this.filter((s: maisong) => s.id == id)
+    if(res.length==0)return undefined
+    else return res[0]
   }
   filter(filter: (i: maisong) => boolean){
     return this.list.filter(filter)

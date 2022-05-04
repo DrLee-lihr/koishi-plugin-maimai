@@ -94,7 +94,12 @@ export default function record(ctx: Context, config: Config) {
 
   ctx.command('maimai')
     .subcommand('.record.song <identifier:string> <difficulty:number> [username:string] 获取谱面的达成分数。')
-    .action((identifier,difficulty,username)=>{
-
+    .action(({session},identifier,difficulty,username)=>{
+      let data: { qq: number } | { username: string }
+      if (username == undefined) {
+        if (session.platform != 'onebot') return '请提供用户名。'
+        else data = { qq: Number.parseInt(session.userId) }
+      }
+      
     })
 }
