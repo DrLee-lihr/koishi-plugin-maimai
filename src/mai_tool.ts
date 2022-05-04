@@ -50,32 +50,25 @@ export function in_level(pred: number, level: string) {
   else return Number.parseInt(level) - 0.05 <= pred && pred <= Number.parseInt(level) + 0.65
 }
 
-export function page_split(list: string[], config: Config, page_num: number = 1,
-  result_prefix='查询结果：',mapper=(v:string)=>v) {
-  var page = page_num == undefined ? 0 : page_num - 1
-  var list_num = Math.floor(list.length / config.result_num_max) + ((list.length % config.result_num_max) == 0 ? 0 : 1)
-  if (list_num <= page || page < 0)
-    return `所请求的页不存在（共${list_num}页）。`
-  var temp: string[] = []
-  for (var i = page * 10; i < (page + 1) * 10; i++) {
-    if (i >= list.length) break
-    temp.push(mapper(list[i]))
-  }
-  return `${result_prefix}\n${temp.join("\n")}\n第${page + 1}页，共${list_num}页`
-}
+export function page_split(list: string[], config: Config, page_num: number, result_prefix?: string):string
+export function page_split<T>(list: T[], config: Config, page_num: number, result_prefix: string,
+  converter: (v: T) => string):string
 
-export function processed_page_split<T>(list: T[], config: Config, page_num: number = 1,mapper:(v:T)=>string,
-  result_prefix='查询结果：') {
+export function page_split<T = string>(list: string[] | T[], config: Config, page_num: number = 1,
+  result_prefix = '查询结果：', converter?:(v:T)=>string) {
   var page = page_num == undefined ? 0 : page_num - 1
   var list_num = Math.floor(list.length / config.result_num_max) + ((list.length % config.result_num_max) == 0 ? 0 : 1)
   if (list_num <= page || page < 0)
     return `所请求的页不存在（共${list_num}页）。`
-  var temp: string[] = []
-  for (var i = page * 10; i < (page + 1) * 10; i++) {
-    if (i >= list.length) break
-    temp.push(mapper(list[i]))
+
+  if (typeof list[0] == 'string') {
+    return `${result_prefix}\n${list.slice(page*10,Math.min(page*10+10,list.length))
+      .join("\n")}\n第${page + 1}页，共${list_num}页`
   }
-  return `${result_prefix}\n${temp.join("\n")}\n第${page + 1}页，共${list_num}页`
+  else {
+    let res=(list as T[]).slice(page*10,Math.min(page*10+10,list.length)).map(converter)
+    return `${result_prefix}\n${res.join("\n")}\n第${page + 1}页，共${list_num}页`
+  }
 }
 
 

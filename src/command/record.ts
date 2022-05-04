@@ -3,8 +3,8 @@ import { Context } from "koishi";
 import sharp from "sharp";
 import { Config, maisonglist } from "..";
 import { difficulty } from "../maichart";
-import { page_split, processed_page_split, tts, version_transform_table } from "../mai_tool";
-import { fc, fs, query_player } from "./b40";
+import { page_split, tts, version_transform_table } from "../mai_tool";
+import { fc, fs } from "./b40";
 import TextToSvg from 'text-to-svg'
 
 
@@ -26,7 +26,7 @@ export default function record(ctx: Context, config: Config) {
 
   async function get_record(data:{qq:number}|{username:string}):Promise<version_list> {
     data['version']=Object.values(version_transform_table)
-    console.log(Object.defineProperty(data,'version',Object.values(version_transform_table)))
+    //console.log(Object.defineProperty(data,'version',Object.values(version_transform_table)))
     return await 
       ctx.http.post('https://www.diving-fish.com/api/maimaidxprober/query/plate',
         data
@@ -55,11 +55,11 @@ export default function record(ctx: Context, config: Config) {
       let list = result.verlist.filter(v => v.level == level)
         .sort((a,b)=>b.achievements-a.achievements)
 
-      let text = processed_page_split<record>(
+      let text = page_split<record>(
         list, config, options.page, 
+        `${username??session.username} 的 ${level} 分数列表：`,
         v => `${v.achievements}% ` +
-            maisonglist.id(v.id).charts[v.level_index].chart_summary_with_base,
-        `${username??session.username} 的 ${level} 分数列表：`
+            maisonglist.id(v.id).charts[v.level_index].chart_summary_with_base
         )
       
       
