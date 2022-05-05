@@ -100,10 +100,12 @@ export default function record(ctx: Context, config: Config) {
         if (session.platform != 'onebot') return '请提供用户名。'
         else data = { qq: Number.parseInt(session.userId) }
       }
+      else data = { username: username }
+
       let song: maisong = undefined
       try { song = await identify(identifier, ctx) }
       catch { return '曲目信息过于模糊，请使用更准确的说法。' }
-      
+
       let result=(await get_version_record(ctx,data,song.object.basic_info.from))
         .verlist.filter(v=>v.id==song.id&&diff_index==v.level_index)
       let song_data=result[0]
