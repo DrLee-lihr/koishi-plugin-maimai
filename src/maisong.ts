@@ -9,7 +9,10 @@ interface basic_info {
   genre: string,
   bpm: number,
   release_date: string,
-  from: string,//version
+  /**
+   * 曲目版本
+   */
+  from: string,
   is_new: boolean
 }
 

@@ -21,7 +21,7 @@ export default function (ctx: Context, config: Config) {
     .subcommand(".alias.lookup <alias:text> 根据别名查询乐曲。")
     .action(async (argv, alias) => {
       try {
-        var res = await alias_get(alias, ctx, config, maisonglist)
+        var res = await alias_get(alias, ctx, config)
       }
       catch (_) {
         return "结果过多，请尝试使用更准确的别名进行搜索。"
@@ -52,12 +52,12 @@ export default function (ctx: Context, config: Config) {
     .shortcut(/^(.*)是什么歌$/, { args: ["$1"] })
 }
 
-export async function alias_get(alias: string, ctx: Context, config: Config, maisonglist: maimai_song_list) {
+export async function alias_get(alias: string, ctx: Context, config?: Config) {
   var response = await ctx.http("GET", encodeURI("https://maimai.ohara-rinne.tech/api/alias/query/" + alias))
   if (response["data"].length == 0) {
     return undefined
   }
-  else if (response["data"].length > config.alias_result_num_max) {
+  else if (response["data"].length > config.alias_result_num_max??5) {
     throw Error("结果过多")
   }
   else if (response["data"].length > 1) {

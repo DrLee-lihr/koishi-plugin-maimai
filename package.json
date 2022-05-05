@@ -1,7 +1,7 @@
 {
     "name": "koishi-plugin-maimai",
     "author": {
-        "name": "DrLee-lihr",
+        "name": "DrLee_lihr",
         "email": "812403lihr@sina.com",
         "url": "https://github.com/DrLee-lihr"
     },
@@ -31,10 +31,10 @@
         "maimai"
     ],
     "peerDependencies": {
-        "koishi": "^4.6.0"
+        "koishi": "^4.6.2"
     },
     "dependencies": {
-        "sharp": "^0.30.3",
+        "sharp": "^0.30.4",
         "text-to-svg": "^3.1.5"
     },
     "devDependencies": {
