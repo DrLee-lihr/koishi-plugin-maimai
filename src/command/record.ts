@@ -1,11 +1,9 @@
-import { s } from "koishi";
 import { Context } from "koishi";
-import sharp from "sharp";
 import { Config, maisonglist } from "..";
-import { difficulty } from "../maichart";
-import { page_split, tts, version_transform_table } from "../mai_tool";
+import maichart, { difficulty } from "../maichart";
+import { get_difficulty_id, identify, page_split, version_transform_table } from "../mai_tool";
 import { fc, fs } from "./b40";
-import TextToSvg from 'text-to-svg'
+import maisong from "../maisong";
 
 
 type record = {
@@ -89,17 +87,35 @@ export default function record(ctx: Context, config: Config) {
       return page_split(
         res, config, options.page, `${username ?? session.username} 的 ${base} 分数列表：`
       )
-    }).shortcut(/^((?:[1-9])|(?:1[0-5]).[0-9])分数列表(?: ([0-9]{1,}))?$/,
+    })
+    .shortcut(/^((?:[1-9])|(?:1[0-5]).[0-9])分数列表(?: ([0-9]{1,}))?$/,
       { args: ['$1'], options: { page: '$2' } })
 
   ctx.command('maimai')
-    .subcommand('.record.song <identifier:string> <difficulty:number> [username:string] 获取谱面的达成分数。')
-    .action(({session},identifier,difficulty,username)=>{
+    .subcommand('.record.song <identifier:string> <difficulty:string> [username:string] 获取谱面的达成分数。')
+    .action(async ({ session }, identifier, difficulty, username) => {
+      let diff_index=get_difficulty_id(difficulty)
       let data: { qq: number } | { username: string }
       if (username == undefined) {
         if (session.platform != 'onebot') return '请提供用户名。'
         else data = { qq: Number.parseInt(session.userId) }
       }
+      let song: maisong = undefined
+      try { song = await identify(identifier, ctx) }
+      catch { return '曲目信息过于模糊，请使用更准确的说法。' }
       
+      let result=(await get_version_record(ctx,data,song.object.basic_info.from))
+        .verlist.filter(v=>v.id==song.id&&diff_index==v.level_index)
+      let song_data=result[0]
+      if (result.length==0) return '未获取到分数，请确认查分器上有对应谱面的数据。'
+      
+      else return [
+          song.song_info_summary,
+          (song.charts[difficulty] as maichart).base_summary,
+          song_data.achievements+'%',
+          `${song_data.fc==''?'无':song_data.fc}/${song_data.fs==''?'无':song_data.fs}`,
+        ].join('\n')
     })
+    .shortcut(/^(绿|红|黄|紫|白)(.*?)分数(?: (.*))?$/,
+      {args:['$2','$1','$3']})
 }

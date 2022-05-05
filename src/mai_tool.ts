@@ -4,6 +4,7 @@ import { difficulty } from "./maichart"
 import text_to_svg from "text-to-svg"
 import maisong from "./maisong"
 import { alias_get } from "./command/alias"
+import { Context } from "koishi"
 
 
 export const resource_path = path.dirname(path.dirname(require.resolve('koishi-plugin-maimai'))) + '\\resources'
@@ -89,7 +90,7 @@ export function page_split<T = string>(list: string[] | T[], config: Config, pag
   }
 }
 
-export function identify(identifier:string):maisong{
+export async function identify(identifier:string,ctx:Context):Promise<maisong>{
   let result:maisong
   let id:number
   try{
@@ -101,11 +102,16 @@ export function identify(identifier:string):maisong{
   catch{
     let res=maisonglist.filter(v=>v.object.title==identifier)
     if(res.length!=0)return res[0]
-    else{
-      alias_get()
+    res=maisonglist.filter(v=>v.object.title.toLowerCase().includes(identifier.toLowerCase()))
+    if(res.length==1)return res[0]
+    const alias=await alias_get(identifier,ctx)
+    if(typeof alias==='undefined')throw Error()
+    try{
+      const img=(alias as maisong).get_song_image()
+      return alias as maisong
     }
+    catch{ throw Error() }
   }
-  
 }
 
 export var version_transform_table = {
