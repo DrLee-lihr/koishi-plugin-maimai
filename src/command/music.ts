@@ -2,7 +2,7 @@ import { Context, segment } from 'koishi'
 import { Config } from '..'
 import { identify } from '../mai_tool'
 
-export default function (ctx: Context, config: Config) {
+export default function cmd_music (ctx: Context, config: Config) {
   ctx.command('maimai')
     .subcommand('.music <identifier:string> 点歌。')
     .action(async (_, identifier) => {

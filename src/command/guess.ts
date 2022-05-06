@@ -2,7 +2,7 @@ import { Context, s, Time } from 'koishi'
 import { Config, maisonglist } from '..'
 import { diff, level_transform } from '../mai_tool'
 
-export default function (ctx: Context, config: Config) {
+export default function cmd_guess (ctx: Context, config: Config) {
   ctx.command('maimai')
     .subcommand('.guess 发起 maimai 猜歌。')
     .option('filter', '-f <filter:string> 给出一个要过滤的曲目的过滤器。', { authority: 3 })
@@ -13,10 +13,10 @@ export default function (ctx: Context, config: Config) {
         i.object.ds[diff.MASTER] >= 13)
       try {
         // eslint-disable-next-line no-eval
-        if (options.filter != undefined) well_known_list = maisonglist.list.filter(eval(options.filter))
+        if (options.filter !== undefined) well_known_list = maisonglist.list.filter(eval(options.filter))
       }
       catch { return '参数错误。' }
-      if (well_known_list == []) return '没有结果。'
+      if (well_known_list === []) return '没有结果。'
       const song = well_known_list[Math.floor(Math.random() * 20000) % well_known_list.length]
 
       const info_list = [

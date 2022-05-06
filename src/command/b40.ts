@@ -38,7 +38,7 @@ type player_data = {
   username:string
 }
 
-export default function (ctx: Context, config: Config) {
+export default function cmd_b40 (ctx: Context, config: Config) {
   if (!fileSystem.existsSync('./cache/maimai')) {
     fileSystem.mkdirSync('./cache/maimai', { recursive: true })
   }

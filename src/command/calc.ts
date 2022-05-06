@@ -2,7 +2,7 @@ import { Context } from 'koishi'
 import { Config, maisonglist } from '..'
 import { get_difficulty_id } from '../mai_tool'
 
-export default function (ctx: Context, config: Config) {
+export default function cmd_calc (ctx: Context, config: Config) {
   ctx.command('maimai')
     .subcommand('.calc.achieve <id:number> <difficulty:string> <achievement:number> ')
     .action((_, id, diff, achieve) => {

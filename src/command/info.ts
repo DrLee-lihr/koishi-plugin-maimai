@@ -4,7 +4,7 @@ import maichart from '../maichart'
 import maisong from '../maisong'
 import { get_difficulty_id, page_split } from '../mai_tool'
 
-export default function (ctx: Context, config: Config) {
+export default function cmd_info (ctx: Context, config: Config) {
   ctx.command('maimai <id:number> [diff:string] 根据id或难度查询乐曲或谱面信息。')
     .action(async (_, id, diff) => {
       const song = maisonglist.id(id)

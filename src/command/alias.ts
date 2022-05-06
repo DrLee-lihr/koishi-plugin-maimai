@@ -2,7 +2,7 @@ import { Context } from 'koishi'
 import { Config, maisonglist } from '..'
 import maisong from '../maisong'
 
-export default function alias (ctx: Context, config: Config) {
+export default function cmd_alias (ctx: Context, config: Config) {
   ctx.command('maimai')
     .subcommand('.alias.get <id:number> 获取id对应乐曲的别名。')
     .action(async (_, id) => {
