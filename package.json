@@ -1,52 +1,52 @@
 {
-    "name": "koishi-plugin-maimai",
-    "author": {
-        "name": "DrLee_lihr",
-        "email": "812403lihr@sina.com",
-        "url": "https://github.com/DrLee-lihr"
-    },
-    "description": "a koishi plugin for maimai(DX) players",
-    "private": false,
-    "version": "1.2.3",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/DrLee-lihr/koishi-plugin-maimai.git"
-    },
-    "bugs": "https://github.com/DrLee-lihr/koishi-plugin-maimai/issues",
-    "main": "lib/index.js",
-    "typings": "lib/index.d.ts",
-    "files": [
-        "/lib",
-        "/dist",
-        "/resources"
-    ],
-    "license": "Apache-2.0",
-    "scripts": {
-        "build": "tsc -b",
-        "lint": "eslint .\\src\\** --fix"
-    },
-    "keywords": [
-        "chatbot",
-        "koishi",
-        "plugin",
-        "maimai"
-    ],
-    "peerDependencies": {
-        "koishi": "^4.6.2"
-    },
-    "dependencies": {
-        "sharp": "^0.30.4",
-        "text-to-svg": "^3.1.5"
-    },
-    "devDependencies": {
-        "@types/sharp": "^0.30.2",
-        "@types/text-to-svg": "^3.1.1",
-        "@typescript-eslint/eslint-plugin": "^5.22.0",
-        "@typescript-eslint/parser": "^5.22.0",
-        "eslint": "^8.0.1",
-        "eslint-config-standard": "^17.0.0",
-        "eslint-plugin-import": "^2.25.2",
-        "eslint-plugin-n": "^15.0.0",
-        "eslint-plugin-promise": "^6.0.0"
-    }
+  "name": "koishi-plugin-maimai",
+  "author": {
+    "name": "DrLee_lihr",
+    "email": "812403lihr@sina.com",
+    "url": "https://github.com/DrLee-lihr"
+  },
+  "description": "a koishi plugin for maimai(DX) players",
+  "private": false,
+  "version": "1.2.3",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DrLee-lihr/koishi-plugin-maimai.git"
+  },
+  "bugs": "https://github.com/DrLee-lihr/koishi-plugin-maimai/issues",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "/lib",
+    "/dist",
+    "/resources"
+  ],
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "tsc -b",
+    "lint": "eslint .\\src\\** --fix"
+  },
+  "keywords": [
+    "chatbot",
+    "koishi",
+    "plugin",
+    "maimai"
+  ],
+  "peerDependencies": {
+    "koishi": "^4.6.2"
+  },
+  "dependencies": {
+    "sharp": "^0.30.4",
+    "text-to-svg": "^3.1.5"
+  },
+  "devDependencies": {
+    "@types/sharp": "^0.30.2",
+    "@types/text-to-svg": "^3.1.1",
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.22.0",
+    "eslint": "^8.14.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.0",
+    "eslint-plugin-promise": "^6.0.0"
+  }
 }
