@@ -39,12 +39,13 @@ export default function cmd_record (ctx: Context, config: Config) {
     .option('page', '-p <page:number> 当结果有多页时要输出的页码。', { fallback: 1 })
     .action(async ({ session, options }, level, username) => {
       let data: { qq: number } | { username: string }
-      if (username == undefined) {
-        if (session.platform != 'onebot') return '请提供用户名。'
+      if (username === undefined) {
+        if (session.platform !== 'onebot') return '请提供用户名。'
         else data = { qq: Number.parseInt(session.userId) }
-      } else data = { username }
+      }
+      else data = { username }
       const result = await get_record(ctx, data)
-      const list = result.verlist.filter(v => v.level == level)
+      const list = result.verlist.filter(v => v.level === level)
         .sort((a, b) => b.achievements - a.achievements)
 
       return page_split<record>(
@@ -62,10 +63,11 @@ export default function cmd_record (ctx: Context, config: Config) {
     .option('page', '-p <page:number> 当结果有多页时要输出的页码。', { fallback: 1 })
     .action(async ({ session, options }, base, username) => {
       let data: { qq: number } | { username: string }
-      if (username == undefined) {
-        if (session.platform != 'onebot') return '请提供用户名。'
+      if (username === undefined) {
+        if (session.platform !== 'onebot') return '请提供用户名。'
         else data = { qq: Number.parseInt(session.userId) }
-      } else data = { username }
+      }
+      else data = { username }
       const result = await get_record(ctx, data)
 
       const res: string[] = []
@@ -73,7 +75,7 @@ export default function cmd_record (ctx: Context, config: Config) {
       result.verlist.sort((a, b) => b.achievements - a.achievements).forEach(
         (v) => {
           const song = maisonglist.id(v.id)
-          if (song.charts[v.level_index].ds == base) {
+          if (song.charts[v.level_index].ds === base) {
             res.push(
               `${v.achievements.toFixed(4)}% ` +
               maisonglist.id(v.id).charts[v.level_index].chart_summary_with_base
@@ -94,28 +96,30 @@ export default function cmd_record (ctx: Context, config: Config) {
       const diff_index = get_difficulty_id(difficulty)
       // console.log(diff_index)
       let data: { qq: number } | { username: string }
-      if (username == undefined) {
-        if (session.platform != 'onebot') return '请提供用户名。'
+      if (username === undefined) {
+        if (session.platform !== 'onebot') return '请提供用户名。'
         else data = { qq: Number.parseInt(session.userId) }
-      } else data = { username }
+      }
+      else data = { username }
 
       let song: maisong
-      try { song = await identify(identifier, ctx) } catch (e) {
-        if (e.message == 'Request failed with status code 502') return '别名服务暂时不可用，请稍后再试。'
+      try { song = await identify(identifier, ctx) }
+      catch (e) {
+        if (e.message === 'Request failed with status code 502') return '别名服务暂时不可用，请稍后再试。'
         return '曲目信息过于模糊，请使用更准确的说法。'
       }
 
       const result = (await get_version_record(ctx, data, song.object.basic_info.from))
-        .verlist.filter(v => v.id == song.id && diff_index == v.level_index)
+        .verlist.filter(v => v.id === song.id && diff_index === v.level_index)
       const song_data = result[0]
-      if (result.length == 0) return '未获取到分数，请确认查分器上有对应谱面的数据。'
+      if (result.length === 0) return '未获取到分数，请确认查分器上有对应谱面的数据。'
 
       else {
         return [
           song.song_info_summary,
           song.charts[diff_index].base_summary,
           song_data.achievements.toFixed(4) + '%',
-        `${song_data.fc == '' ? '无' : song_data.fc}/${song_data.fs == '' ? '无' : song_data.fs}`
+        `${song_data.fc === '' ? '无' : song_data.fc} / ${song_data.fs === '' ? '无' : song_data.fs}`
         ].join('\n')
       }
     })

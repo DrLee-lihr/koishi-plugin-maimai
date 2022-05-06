@@ -52,7 +52,8 @@ export default function (ctx: Context, config: Config) {
     }
     const text_img = gener_img(use_fira ? tts_fira : tts)
 
-    if (use_extract && (await text_img.metadata()).width > 190) { return text_img.extract({ left: 0, top: 0, height: size, width: 200 }).toBuffer() } else return text_img.toBuffer()
+    if (use_extract && (await text_img.metadata()).width > 190) { return text_img.extract({ left: 0, top: 0, height: size, width: 200 }).toBuffer() }
+    else return text_img.toBuffer()
   }
 
   async function draw_song (a: song_result, rank: number) {
@@ -114,7 +115,7 @@ export default function (ctx: Context, config: Config) {
       }
     ]
 
-    if (a.fc != '') {
+    if (a.fc !== '') {
       composite_list.push({
         input: (await sharp(`${maimai_resource_path}\\${a.fc}.png`)
           .resize(42)
@@ -123,7 +124,7 @@ export default function (ctx: Context, config: Config) {
         top: 90
       })
     }
-    if (a.fs != '') {
+    if (a.fs !== '') {
       composite_list.push({
         input: (await sharp(`${maimai_resource_path}\\${a.fs}.png`)
           .resize(42)
@@ -166,7 +167,7 @@ export default function (ctx: Context, config: Config) {
             }
           ]
 
-          if (result.plate != '' && result.plate != null) {
+          if (result.plate !== '' && result.plate != null) {
             composite_list.push({
               input: (await text2svgbuffer(result.plate, 160, false, false, 'black'
               )),
@@ -198,11 +199,11 @@ export default function (ctx: Context, config: Config) {
           return (segment.image(await background.composite(composite_list).toBuffer()))
         }).catch((e) => {
           console.log(e)
-          if (e.message == 'Request failed with status code 400') {
+          if (e.message === 'Request failed with status code 400') {
             return '用户未找到，请确保' +
-            (username == undefined ? '用户已在查分器中绑定QQ号。' : '输入的用户名正确。')
+            (username === undefined ? '用户已在查分器中绑定QQ号。' : '输入的用户名正确。')
           }
-          if (e.message == 'Request failed with status code 403') return '该用户禁止了其他人获取数据。'
+          if (e.message === 'Request failed with status code 403') return '该用户禁止了其他人获取数据。'
           else return e.message
         })
     })
@@ -210,11 +211,12 @@ export default function (ctx: Context, config: Config) {
 
 export async function query_player (session:Session, username:string, ctx:Context):Promise<player_data> {
   let data: { qq: string } | { username: string }
-  if (username != undefined) {
-    data = (session.platform == 'onebot' && /^\[CQ:at,id=([0-9]*)]$/.test(username))
+  if (username !== undefined) {
+    data = (session.platform === 'onebot' && /^\[CQ:at,id=([0-9]*)]$/.test(username))
       ? { qq: username.match(/^\[CQ:at,id=([0-9]*)]$/)[1] }
       : { username }
-  } else if (session.platform != 'onebot') throw Error('请输入正确的用户名。')
+  }
+  else if (session.platform !== 'onebot') throw Error('请输入正确的用户名。')
   else data = { qq: session.userId }
   return await ctx.http.post('https://www.diving-fish.com/api/maimaidxprober/query/player', data)
 }

@@ -38,8 +38,8 @@ export default class {
   constructor (object: song_obj, stat:song_stat) {
     this.id = parseInt(object.id)
     this.object = object
-    this.has_rem = object.charts.length == 5
-    this.is_sd = object.type == 'SD'
+    this.has_rem = object.charts.length === 5
+    this.is_sd = object.type === 'SD'
     this.type = object.type
     this.song_info_summary = `${this.id}.${object.title}(${this.type})`
     this.song_ds_summary = object.ds.map((i) => i.toFixed(1)).join('/')

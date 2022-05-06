@@ -45,11 +45,12 @@ export function get_difficulty_id (s: string): difficulty { // TODO:什么时候
 export var difficulty_trans_table = { 绿: 0, 黄: 1, 红: 2, 紫: 3, 白: 4 }
 export function in_level (pred: number, level: string) {
   if (level.includes('.')) {
-    return Number.parseFloat(level) == pred
+    return Number.parseFloat(level) === pred
   }
   if (level.includes('+')) {
     return Number.parseInt(level.split('+')[0]) + 0.65 <= pred && pred <= Number.parseInt(level.split('+')[0]) + 0.95
-  } else return Number.parseInt(level) - 0.05 <= pred && pred <= Number.parseInt(level) + 0.65
+  }
+  else return Number.parseInt(level) - 0.05 <= pred && pred <= Number.parseInt(level) + 0.65
 }
 
 /**
@@ -74,14 +75,15 @@ export function page_split<T>(list: T[], config: Config, page_num: number, resul
 
 export function page_split<T = string> (list: string[] | T[], config: Config, page_num: number = 1,
   result_prefix = '查询结果：', converter?:(v:T)=>string) {
-  const page = page_num == undefined ? 0 : page_num - 1
-  const list_num = Math.floor(list.length / config.result_num_max) + ((list.length % config.result_num_max) == 0 ? 0 : 1)
+  const page = page_num === undefined ? 0 : page_num - 1
+  const list_num = Math.floor(list.length / config.result_num_max) + ((list.length % config.result_num_max) === 0 ? 0 : 1)
   if (list_num <= page || page < 0) { return `所请求的页不存在（共${list_num}页）。` }
 
   if (typeof list[0] === 'string') {
     return `${result_prefix}\n${list.slice(page * 10, Math.min(page * 10 + 10, list.length))
       .join('\n')}\n第${page + 1}页，共${list_num}页`
-  } else {
+  }
+  else {
     const res = (list as T[]).slice(page * 10, Math.min(page * 10 + 10, list.length)).map(converter)
     return `${result_prefix}\n${res.join('\n')}\n第${page + 1}页，共${list_num}页`
   }
@@ -93,19 +95,21 @@ export async function identify (identifier:string, ctx:Context):Promise<maisong>
   try {
     id = Number.parseInt(identifier)
     result = maisonglist.id(id)
-    if (result == undefined) throw Error()
+    if (result === undefined) throw Error()
     else return result
-  } catch {
-    let res = maisonglist.filter(v => v.object.title == identifier)
-    if (res.length != 0) return res[0]
+  }
+  catch {
+    let res = maisonglist.filter(v => v.object.title === identifier)
+    if (res.length !== 0) return res[0]
     res = maisonglist.filter(v => v.object.title.toLowerCase().includes(identifier.toLowerCase()))
-    if (res.length == 1) return res[0]
+    if (res.length === 1) return res[0]
     const alias = await alias_get(identifier, ctx)
-    if (typeof alias === 'undefined') throw Error()
+    if (alias === undefined) throw Error()
     try {
       (alias as maisong).get_song_image()
       return alias as maisong
-    } catch { throw Error() }
+    }
+    catch { throw Error() }
   }
 }
 

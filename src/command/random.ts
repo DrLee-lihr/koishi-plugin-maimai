@@ -2,7 +2,7 @@ import { Context } from 'koishi'
 import { Config, maisonglist } from '..'
 import { in_level, difficulty_trans_table, version_transform_table } from '../mai_tool'
 
-export default function (ctx: Context, config: Config) {
+export default function cmd_random (ctx: Context, config: Config) {
   ctx.command('maimai')
     .subcommand('.random.chart 随机谱面。')
     .option('level', '-l [level:string] 谱面标级。', { fallback: '歌' })
@@ -13,12 +13,12 @@ export default function (ctx: Context, config: Config) {
     .option('version', '-v [version:string] 谱面版本。', { fallback: '' })
     .action(({ options }) => {
       const result = maisonglist.filter_chart((chart) =>
-        (options.level == '歌' || in_level(chart.ds, options.level)) &&
+        (options.level === '歌' || in_level(chart.ds, options.level)) &&
         (chart.song.object.basic_info.artist.toLowerCase().includes(options.artist.toLowerCase())) &&
         (chart.object.charter.toLowerCase().includes(options.charter.toLowerCase())) &&
-        (options.difficulty == '' || (chart.difficulty == difficulty_trans_table[options.difficulty])) &&
-        (options.type == '' || ((chart.song.is_sd ? '标准' : 'DX') == options.type)) &&
-        (options.version == '' || (chart.song.object.basic_info.from == version_transform_table[options.version]))
+        (options.difficulty === '' || (chart.difficulty === difficulty_trans_table[options.difficulty])) &&
+        (options.type === '' || ((chart.song.is_sd ? '标准' : 'DX') === options.type)) &&
+        (options.version === '' || (chart.song.object.basic_info.from === version_transform_table[options.version]))
       )
       const chart = result[Math.floor(Math.random() * 10000) % result.length]
       return [`从${result.length}个符合条件的结果中随机：`, chart.chart_summary,
@@ -42,8 +42,8 @@ export default function (ctx: Context, config: Config) {
     .action(({ options }) => {
       const result = maisonglist.filter((song) =>
         (song.object.basic_info.artist.toLowerCase().includes(options.artist.toLowerCase())) &&
-        (options.version == '' || (song.object.basic_info.from == version_transform_table[options.version])) &&
-        (options.type == '' || options.type == (song.is_sd ? '标准' : 'DX'))
+        (options.version === '' || (song.object.basic_info.from === version_transform_table[options.version])) &&
+        (options.type === '' || options.type === (song.is_sd ? '标准' : 'DX'))
       )
       const song = result[Math.floor(Math.random() * 10000) % result.length]
       return [`从${result.length}个符合条件的结果中随机：`, song.song_info_summary,

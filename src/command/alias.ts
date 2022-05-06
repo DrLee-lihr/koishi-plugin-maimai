@@ -19,7 +19,8 @@ export default function alias (ctx: Context, config: Config) {
       let res: maisong | maisong[]
       try {
         res = await alias_get(alias, ctx, config)
-      } catch (e) {
+      }
+      catch (e) {
         console.log(e.message)
         if (e.message === 'Request failed with status code 502') return '别名服务暂时不可用，请稍后再试。'
         return '结果过多，请尝试使用更准确的别名进行搜索。'
@@ -31,9 +32,9 @@ export default function alias (ctx: Context, config: Config) {
         }
         case 'object': {
           try {
-            const f = res as maisong
-            if (f.is_sd == undefined) throw Error()
-          } catch {
+            if ((res as maisong).is_sd === undefined) throw Error()
+          }
+          catch {
             const a = ['您要找的可能是以下曲目中的一首：'];
             (<any>res).forEach((element: { song_info_summary: string; }) => {
               a.push(element.song_info_summary)
@@ -51,13 +52,15 @@ export default function alias (ctx: Context, config: Config) {
 
 export async function alias_get (alias: string, ctx: Context, config?: Config) {
   const response = await ctx.http('GET', encodeURI('https://maimai.ohara-rinne.tech/api/alias/query/' + alias))
-  if (response.data.length == 0) {
+  if (response.data.length === 0) {
     return undefined
-  } else if (response.data.length > config.alias_result_num_max ?? 5) {
+  }
+  else if (response.data.length > config.alias_result_num_max ?? 5) {
     throw Error('结果过多')
-  } else if (response.data.length > 1) {
+  }
+  else if (response.data.length > 1) {
     for (const i of response.data) {
-      if (i.alias == alias) {
+      if (i.alias === alias) {
         return maisonglist.id(i.musicId)
       }
     }
@@ -67,7 +70,8 @@ export async function alias_get (alias: string, ctx: Context, config?: Config) {
       res.push(maisonglist.id(element['musicId']))
     })
     return res
-  } else {
+  }
+  else {
     return maisonglist.id(response.data[0].musicId)
   }
 }

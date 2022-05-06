@@ -9,9 +9,9 @@ export default function (ctx: Context, config: Config) {
       const error = '输入的参数无效。'
 
       const song = maisonglist.id(id)
-      if (song == undefined) return error
+      if (song === undefined) return error
       const chart = song.charts[get_difficulty_id(diff)]
-      if (chart == undefined || achieve > 101 || achieve < 0) return error
+      if (chart === undefined || achieve > 101 || achieve < 0) return error
 
       const notes = chart.object.notes
       let max_combo = 0
@@ -55,9 +55,9 @@ export default function (ctx: Context, config: Config) {
       const error = '输入的参数无效。'
 
       const song = maisonglist.id(id)
-      if (song == undefined) return error
+      if (song === undefined) return error
       const chart = song.charts[get_difficulty_id(diff)]
-      if (chart == undefined || ach > 101 || ach < 0) return error
+      if (chart === undefined || ach > 101 || ach < 0) return error
 
       const base = chart.ds
       const res = calculate_factor(ach)
@@ -72,7 +72,7 @@ export default function (ctx: Context, config: Config) {
   ctx.command('maimai')
     .subcommand('.calc.base <base:number> <achievement:number> 根据定数及达成率计算DX Rating。')
     .action((_, base, ach) => {
-      if (Math.floor(base * 10) != base * 10 || ach > 101 || ach < 0) return '输入的参数无效。'
+      if (Math.floor(base * 10) !== base * 10 || ach > 101 || ach < 0) return '输入的参数无效。'
 
       const res = calculate_factor(ach)
       return [

@@ -14,7 +14,8 @@ export default function (ctx: Context, config: Config) {
       try {
         // eslint-disable-next-line no-eval
         if (options.filter != undefined) well_known_list = maisonglist.list.filter(eval(options.filter))
-      } catch { return '参数错误。' }
+      }
+      catch { return '参数错误。' }
       if (well_known_list == []) return '没有结果。'
       const song = well_known_list[Math.floor(Math.random() * 20000) % well_known_list.length]
 
@@ -70,7 +71,8 @@ export default function (ctx: Context, config: Config) {
 
           return [s('at', { id: session_1.userId }) + ' 恭喜你答对了！', `答案：${song.song_info_summary}`,
             song.get_song_image()].join('\n')
-        } else return next()
+        }
+        else return next()
       }, true)
 
       setTimeout(midware, 170 * Time.second)
