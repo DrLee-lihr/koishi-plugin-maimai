@@ -1,29 +1,30 @@
 import { Context } from "koishi";
 import { Config, maisonglist } from "..";
-import maimai_song_list from "../maimai_song_list";
 import maisong from "../maisong";
 
 
-export default function (ctx: Context, config: Config) {
+export default function alias(ctx: Context, config: Config) {
 
   ctx.command("maimai")
     .subcommand(".alias.get <id:number> 获取id对应乐曲的别名。")
     .action(async (_, id) => {
-      return await ctx.http("GET", "https://maimai.ohara-rinne.tech/api/alias/" + id).then((response) => {
-        return (maisonglist.id(id).song_info_summary + "有如下别名：\n" +
-          (<string[]><any>response["data"]).join("\n"))
-      })
+      return await ctx.http("GET", "https://maimai.ohara-rinne.tech/api/alias/" + id).then((response) =>
+        (maisonglist.id(id).song_info_summary + "有如下别名：\n" +
+          (response["data"] as string[]).join("\n"))
+      ).catch((_)=>'别名服务暂时不可用，请稍后再试。')
     })
     .shortcut(/^([0-9]*)有什么别名$/, { args: ["$1"] })
 
 
   ctx.command("maimai")
     .subcommand(".alias.lookup <alias:text> 根据别名查询乐曲。")
-    .action(async (argv, alias) => {
+    .action(async (_argv, alias) => {
       try {
         var res = await alias_get(alias, ctx, config)
       }
-      catch (_) {
+      catch (e) {
+        console.log(e.message)
+        if(e.message === 'Request failed with status code 502')return '别名服务暂时不可用，请稍后再试。'
         return "结果过多，请尝试使用更准确的别名进行搜索。"
       }
 
