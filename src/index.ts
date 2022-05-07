@@ -16,12 +16,10 @@ export const name = 'maimai'
 export interface Config {
   result_num_max: number
   alias_result_num_max: number
-  token: string
 }
 export const schema = Schema.object({
   result_num_max: Schema.number().default(10).description('返回搜索结果时单次最多显示的结果数量。'),
-  alias_result_num_max: Schema.number().default(3).description('返回别名搜索结果时最多显示的结果数量。'),
-  token: Schema.string().description('查分器上的开发者 token （可联系水鱼获取）。')
+  alias_result_num_max: Schema.number().default(3).description('返回别名搜索结果时最多显示的结果数量。')
 })
 
 export let maisonglist: maimai_song_list

@@ -25,7 +25,7 @@ export interface song_obj {
   basic_info: basic_info
 }
 
-export default class {
+export default class maisong {
   id: number
   object: song_obj
   charts: maichart[]

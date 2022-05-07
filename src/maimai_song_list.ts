@@ -2,7 +2,7 @@ import { Context } from 'koishi'
 import maichart, { chart_stats } from './maichart'
 import maisong, { song_obj } from './maisong'
 
-export default class {
+export default class maimai_song_list {
   jsonArray: song_obj[]
   list: maisong[]
   chart_list: maichart[] = []

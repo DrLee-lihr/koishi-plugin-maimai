@@ -21,7 +21,7 @@ export interface chart_stats {
   [k: number]: song_stat
 }
 
-export default class {
+export default class maichart {
   song: maisong
   object: chart_obj
   difficulty: difficulty
@@ -54,7 +54,7 @@ export default class {
       `tag:${stat.tag}`,
       `共有${stat.count}名玩家游玩了该谱面，平均达成率：${stat.avg}`,
       `其中${stat.sssp_count}人（${Math.floor((stat.sssp_count / stat.count) * 10000) / 100}%）达成 SSS`,
-      `SSS人数在同级别曲目中排名：（${stat.v + 1}/${stat.t}`
+      `SSS人数在同级别曲目中排名：（${stat.v + 1}/${stat.t}）`
     ].join('\n')
   }
 }
