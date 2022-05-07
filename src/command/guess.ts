@@ -15,8 +15,8 @@ export default function cmd_guess (ctx: Context, config: Config) {
         // eslint-disable-next-line no-eval
         if (options.filter !== undefined) well_known_list = maisonglist.list.filter(eval(options.filter))
       }
-      catch { return '参数错误。' }
-      if (well_known_list === []) return '没有结果。'
+      catch (e) { return '参数错误:\n' + e.message }
+      if (well_known_list.length === 0) return '没有结果。'
       const song = well_known_list[Math.floor(Math.random() * 20000) % well_known_list.length]
 
       const info_list = [
