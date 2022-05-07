@@ -2,11 +2,32 @@ import { Context, s, Time } from 'koishi'
 import { Config, maisonglist } from '..'
 import { diff, level_transform } from '../mai_tool'
 
+declare module 'koishi' {
+  // eslint-disable-next-line no-unused-vars
+  interface Channel {
+    /**
+     * 1: 在猜
+     * 0: 没猜
+     */
+    maimai_is_guessing: number
+  }
+}
+
 export default function cmd_guess (ctx: Context, config: Config) {
+  ctx.model.extend('channel', { maimai_is_guessing: { type: 'integer', initial: 0 } })
+
   ctx.command('maimai')
     .subcommand('.guess 发起 maimai 猜歌。')
+    .channelFields(['maimai_is_guessing'])
     .option('filter', '-f <filter:string> 给出一个要过滤的曲目的过滤器。', { authority: 3 })
     .action(async ({ session, options }) => {
+      const guess = { is_guessing: 1, not_guessing: 0 }
+      const set_guessing = () => { session.channel.maimai_is_guessing = 1 }
+      const unset_guessing = () => { session.channel.maimai_is_guessing = 0 }
+
+      if (session.channel.maimai_is_guessing === guess.is_guessing) return '单个群聊同时只能进行一组猜歌。'
+      else set_guessing()
+
       await session.send('猜歌开始，接下来我将依次给出7个条件，请你根据条件猜出这首歌的名字。\n英文至少五个字母匹配，其他最少三个字匹配。')
 
       let well_known_list = maisonglist.filter((i) => (i.has_rem && i.object.ds[diff.REMASTER] >= 13) ||
@@ -15,8 +36,8 @@ export default function cmd_guess (ctx: Context, config: Config) {
         // eslint-disable-next-line no-eval
         if (options.filter !== undefined) well_known_list = maisonglist.list.filter(eval(options.filter))
       }
-      catch (e) { return '参数错误:\n' + e.message }
-      if (well_known_list.length === 0) return '没有结果。'
+      catch (e) { unset_guessing(); return '参数错误:\n' + e.message }
+      if (well_known_list.length === 0) { unset_guessing(); return '没有结果。' }
       const song = well_known_list[Math.floor(Math.random() * 20000) % well_known_list.length]
 
       const info_list = [
@@ -65,6 +86,7 @@ export default function cmd_guess (ctx: Context, config: Config) {
 
         if (judge(song.object.title, session_1.content)) {
           midware()
+          unset_guessing()
 
           // FIXME: it doesn't work properly -> bug confirmed; waiting for fix
           session.cancelQueued()
@@ -75,6 +97,6 @@ export default function cmd_guess (ctx: Context, config: Config) {
         else return next()
       }, true)
 
-      setTimeout(midware, 170 * Time.second)
+      setTimeout(() => { midware(); unset_guessing() }, 170 * Time.second)
     })
 }

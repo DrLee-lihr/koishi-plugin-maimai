@@ -22,6 +22,8 @@ export const schema = Schema.object({
   alias_result_num_max: Schema.number().default(3).description('返回别名搜索结果时最多显示的结果数量。')
 })
 
+export const using = ['database'] as const
+
 export let maisonglist: maimai_song_list
 
 export function apply (ctx: Context, config: Config) {
