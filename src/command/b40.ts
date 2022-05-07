@@ -198,7 +198,7 @@ export default function cmd_b40 (ctx: Context, config: Config) {
           }
           return (segment.image(await background.composite(composite_list).toBuffer()))
         }).catch((e) => {
-          console.log(e)
+          console.log(e.message)
           if (e.message === 'Request failed with status code 400') {
             return '用户未找到，请确保' +
             (username === undefined ? '用户已在查分器中绑定QQ号。' : '输入的用户名正确。')
