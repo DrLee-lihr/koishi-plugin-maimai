@@ -27,7 +27,7 @@ limitations under the License.
 ## Disclaimer
 
 本插件与华立、SEGA 等公司无任何关系，注册商标所有权归相关品牌所有。  
-本插件使用的关于 maimai DX UNiVERSE / maimai DX 2021 / 舞萌 DX （或 maimai 的其他发行版本）的有关资源内容遵循合理使用。  
+本插件使用的关于 maimai DX UNiVERSE PLUS / maimai DX 2021 / 舞萌 DX （或 maimai 的其他发行版本）的有关资源内容遵循合理使用。  
 作者不对插件用户对插件的滥用造成的后果负法律责任。
 
 ## Thanks
