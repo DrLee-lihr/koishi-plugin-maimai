@@ -40,4 +40,12 @@ export function apply (ctx: Context, config: Config) {
       mai_record
     ].forEach(i => ctx.plugin(i, config))
   })
+
+  ctx.command('maimai')
+    .subcommand('.reload')
+    .action(async (_) => {
+      maisonglist = new maimai_song_list(ctx)
+      await maisonglist.promise
+      return '重载完成。'
+    })
 }
