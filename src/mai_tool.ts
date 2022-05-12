@@ -21,6 +21,8 @@ export const diff = {
   REMASTER: 4
 }
 
+export type payload_data = { qq: number | string } | { username: string }
+
 const difficulty_id: string[][] = [
   ['0', '绿', 'bsc', 'basic', 'bas'],
   ['1', '黄', 'adv', 'advanced'],

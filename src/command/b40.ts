@@ -5,7 +5,7 @@ import sharp from 'sharp'
 import text_to_svg from 'text-to-svg'
 import path from 'path'
 import { difficulty } from '../maichart'
-import { maimai_resource_path, tts, tts_fira } from '../mai_tool'
+import { maimai_resource_path, payload_data, tts, tts_fira } from '../mai_tool'
 
 export type fc = 'fc' | 'fcp' | 'ap' | 'app' | ''
 export type fs = 'fs' | 'fsp' | 'fsd' | 'fsdp' | ''
@@ -52,7 +52,9 @@ export default function cmd_b40 (ctx: Context, config: Config) {
     }
     const text_img = gener_img(use_fira ? tts_fira : tts)
 
-    if (use_extract && (await text_img.metadata()).width > 190) { return text_img.extract({ left: 0, top: 0, height: size, width: 200 }).toBuffer() }
+    if (use_extract && (await text_img.metadata()).width > 190) {
+      return text_img.extract({ left: 0, top: 0, height: size, width: 200 }).toBuffer()
+    }
     else return text_img.toBuffer()
   }
 
@@ -169,8 +171,7 @@ export default function cmd_b40 (ctx: Context, config: Config) {
 
           if (result.plate !== '' && result.plate != null) {
             composite_list.push({
-              input: (await text2svgbuffer(result.plate, 160, false, false, 'black'
-              )),
+              input: (await text2svgbuffer(result.plate, 160, false, false, 'black')),
               left: 1000,
               top: 20
             })
@@ -210,7 +211,7 @@ export default function cmd_b40 (ctx: Context, config: Config) {
 }
 
 export async function query_player (session:Session, username:string, ctx:Context):Promise<player_data> {
-  let data: { qq: string } | { username: string }
+  let data: payload_data
   if (username !== undefined) {
     data = (session.platform === 'onebot' && /^\[CQ:at,id=([0-9]*)]$/.test(username))
       ? { qq: username.match(/^\[CQ:at,id=([0-9]*)]$/)[1] }

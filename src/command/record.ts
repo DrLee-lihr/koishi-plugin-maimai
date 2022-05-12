@@ -1,35 +1,26 @@
 import { Context } from 'koishi'
 import { Config, maisonglist } from '..'
-import { difficulty } from '../maichart'
-import { get_difficulty_id, identify, page_split, version_transform_table } from '../mai_tool'
-import { fc, fs } from './b40'
+import { get_difficulty_id, identify, page_split, payload_data, version_transform_table } from '../mai_tool'
+import { song_result } from './b40'
 import maisong from '../maisong'
 
-type record = {
-  achievements: number,
-  fc: fc,
-  fs: fs,
-  id: number,
-  level: string,
-  level_index: difficulty,
-  title: string,
-  type: 'DX' | 'SD'
-}
+type record = Pick<song_result, 'achievements'|'fc'|'fs'|'level'|'level_index'|'title'|'type'> & { id: number }
+
 interface version_list {
   verlist: record[]
 }
 
-export async function get_record (ctx: Context, data: { qq: number } | { username: string }): Promise<version_list> {
-  // eslint-disable-next-line dot-notation
-  data['version'] = Object.values(version_transform_table)
+type data = payload_data & { version?:string[] }
+
+export async function get_record (ctx: Context, data: data): Promise<version_list> {
+  data.version = Object.values(version_transform_table)
   // console.log(Object.defineProperty(data,'version',Object.values(version_transform_table)))
   return await
   ctx.http.post('https://www.diving-fish.com/api/maimaidxprober/query/plate', data).catch(console.log)
 }
 
-async function get_version_record (ctx: Context, data: { qq: number } | { username: string }, version: string): Promise<version_list> {
-  // eslint-disable-next-line dot-notation
-  data['version'] = [version]
+async function get_version_record (ctx: Context, data: data, version: string): Promise<version_list> {
+  data.version = [version]
   return await ctx.http.post('https://www.diving-fish.com/api/maimaidxprober/query/plate', data).catch(console.log)
 }
 
@@ -38,7 +29,7 @@ export default function cmd_record (ctx: Context, config: Config) {
     .subcommand('.record.level <level:string> [username:string] 获取对应标级的谱面的分数。')
     .option('page', '-p <page:number> 当结果有多页时要输出的页码。', { fallback: 1 })
     .action(async ({ session, options }, level, username) => {
-      let data: { qq: number } | { username: string }
+      let data: payload_data
       if (username === undefined) {
         if (session.platform !== 'onebot') return '请提供用户名。'
         else data = { qq: Number.parseInt(session.userId) }
@@ -62,7 +53,7 @@ export default function cmd_record (ctx: Context, config: Config) {
     .subcommand('.record.base <base:number> [username:string] 获取对应定数的谱面的分数。')
     .option('page', '-p <page:number> 当结果有多页时要输出的页码。', { fallback: 1 })
     .action(async ({ session, options }, base, username) => {
-      let data: { qq: number } | { username: string }
+      let data: payload_data
       if (username === undefined) {
         if (session.platform !== 'onebot') return '请提供用户名。'
         else data = { qq: Number.parseInt(session.userId) }
@@ -95,7 +86,7 @@ export default function cmd_record (ctx: Context, config: Config) {
     .action(async ({ session }, identifier, difficulty, username) => {
       const diff_index = get_difficulty_id(difficulty)
       // console.log(diff_index)
-      let data: { qq: number } | { username: string }
+      let data: payload_data
       if (username === undefined) {
         if (session.platform !== 'onebot') return '请提供用户名。'
         else data = { qq: Number.parseInt(session.userId) }
