@@ -126,7 +126,7 @@ export var version_transform_table = {
   紫: 'maimai MURASAKi',
   堇: 'maimai MURASAKi PLUS',
   白: 'maimai MiLK',
-  雪: 'MiLK PLUS',
+  雪: 'MiLK PLUS', // sic
   辉: 'maimai FiNALE',
   熊: 'maimai でらっくす',
   华: 'maimai でらっくす',
