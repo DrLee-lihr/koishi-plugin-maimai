@@ -26,16 +26,16 @@ export interface song_obj {
 }
 
 export default class maisong {
-  id: number
-  object: song_obj
-  charts: maichart[]
-  has_rem: boolean
-  is_sd: boolean
-  type: string
-  song_info_summary: string
-  song_ds_summary: string
-  basic_info_summary: string
-  constructor (object: song_obj, stat:song_stat) {
+  public id: number
+  public object: song_obj
+  public charts: maichart[]
+  public has_rem: boolean
+  public is_sd: boolean
+  public type: string
+  public song_info_summary: string
+  public song_ds_summary: string
+  public basic_info_summary: string
+  public constructor(object: song_obj, stat: song_stat) {
     this.id = parseInt(object.id)
     this.object = object
     this.has_rem = object.charts.length === 5
@@ -52,7 +52,7 @@ export default class maisong {
       (element, index) => new maichart(element, this, index as difficulty, stat[index] as chart_stat))
   }
 
-  get_song_image () {
+  public get_song_image() {
     return segment('image', { url: 'https://www.diving-fish.com/covers/' + this.id + '.jpg' })
   }
 }

@@ -13,7 +13,7 @@ declare module 'koishi' {
   }
 }
 
-export default function cmd_guess (ctx: Context, config: Config) {
+export default function cmd_guess(ctx: Context, config: Config) {
   ctx.model.extend('channel', { maimai_is_guessing: { type: 'integer', initial: 0 } })
 
   ctx.command('maimai')
@@ -92,7 +92,7 @@ export default function cmd_guess (ctx: Context, config: Config) {
           session.cancelQueued()
 
           return [s('at', { id: session_1.userId }) + ' 恭喜你答对了！', `答案：${song.song_info_summary}`,
-            song.get_song_image()].join('\n')
+          song.get_song_image()].join('\n')
         }
         else return next()
       }, true)

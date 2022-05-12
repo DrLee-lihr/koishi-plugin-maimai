@@ -9,7 +9,7 @@ import { maimai_resource_path, payload_data, tts, tts_fira } from '../mai_tool'
 
 export type fc = 'fc' | 'fcp' | 'ap' | 'app' | ''
 export type fs = 'fs' | 'fsp' | 'fsd' | 'fsdp' | ''
-export type song_result = {
+export interface song_result {
   achievements: number,
   ds: number,
   dxScore: number,
@@ -24,26 +24,26 @@ export type song_result = {
   title: string,
   type: 'DX' | 'SD'
 }
-type player_data = {
-  additional_rating:number,
-  charts:{
-    dx:song_result[],
-    sd:song_result[],
+interface player_data {
+  additional_rating: number,
+  charts: {
+    dx: song_result[],
+    sd: song_result[],
   }
-  nickname?:string,
-  plate?:string,
-  rating:number,
-  user_data?,
-  user_id?,
-  username:string
+  nickname?: string,
+  plate?: string,
+  rating: number,
+  user_data?: any,
+  user_id?: any,
+  username: string
 }
 
-export default function cmd_b40 (ctx: Context, config: Config) {
+export default function cmd_b40(ctx: Context, config: Config) {
   if (!fileSystem.existsSync('./cache/maimai')) {
     fileSystem.mkdirSync('./cache/maimai', { recursive: true })
   }
 
-  async function text2svgbuffer (text: string, size: number, use_fira = true, use_extract = true,
+  async function text2svgbuffer(text: string, size: number, use_fira = true, use_extract = true,
     color = 'white') {
     const gener_img = (i: text_to_svg) => {
       return sharp(Buffer.from(i.getSVG(text, {
@@ -58,7 +58,7 @@ export default function cmd_b40 (ctx: Context, config: Config) {
     else return text_img.toBuffer()
   }
 
-  async function draw_song (a: song_result, rank: number) {
+  async function draw_song(a: song_result, rank: number) {
     const id: number = a.song_id
     const cachePath = path.resolve(`./cache/maimai/${id}.jpg`)
     let base = sharp(
@@ -69,7 +69,7 @@ export default function cmd_b40 (ctx: Context, config: Config) {
             fileSystem.writeFile(cachePath, buffer, () => { })
             return buffer
           })
-          .catch((_) => { return fileSystem.readFileSync(path.resolve(maimai_resource_path, 'no_image.png')) })
+          .catch(() => { return fileSystem.readFileSync(path.resolve(maimai_resource_path, 'no_image.png')) })
     )
 
     base = base.resize(200, 200).blur(10).modulate({ brightness: 0.9 })
@@ -81,13 +81,7 @@ export default function cmd_b40 (ctx: Context, config: Config) {
         top: 10
       },
       {
-        input: (await sharp(`${maimai_resource_path}\\${{
-          0: 'basic',
-          1: 'advanced',
-          2: 'expert',
-          3: 'master',
-          4: 'remaster'
-        }[a.level_index]}.png`)
+        input: (await sharp(`${maimai_resource_path}\\${['basic', 'advanced', 'expert', 'master', 'remaster'][a.level_index]}.png`)
           .resize(null, 21)
           .toBuffer()),
         left: 10,
@@ -147,7 +141,7 @@ export default function cmd_b40 (ctx: Context, config: Config) {
       session.send('处理中，请稍候……')
 
       return await query_player(session, username, ctx)
-        .then(async (result:player_data) => {
+        .then(async (result: player_data) => {
           const background = sharp(`${maimai_resource_path}\\b40.png`)
 
           const composite_list = [
@@ -169,7 +163,7 @@ export default function cmd_b40 (ctx: Context, config: Config) {
             }
           ]
 
-          if (result.plate !== '' && result.plate != null) {
+          if (result.plate !== '' && result.plate !== null) {
             composite_list.push({
               input: (await text2svgbuffer(result.plate, 160, false, false, 'black')),
               left: 1000,
@@ -202,7 +196,7 @@ export default function cmd_b40 (ctx: Context, config: Config) {
           console.log(e.message)
           if (e.message === 'Request failed with status code 400') {
             return '用户未找到，请确保' +
-            (username === undefined ? '用户已在查分器中绑定QQ号。' : '输入的用户名正确。')
+              (username === undefined ? '用户已在查分器中绑定QQ号。' : '输入的用户名正确。')
           }
           if (e.message === 'Request failed with status code 403') return '该用户禁止了其他人获取数据。'
           else return e.message
@@ -210,7 +204,7 @@ export default function cmd_b40 (ctx: Context, config: Config) {
     })
 }
 
-export async function query_player (session:Session, username:string, ctx:Context):Promise<player_data> {
+export async function query_player(session: Session, username: string, ctx: Context): Promise<player_data> {
   let data: payload_data
   if (username !== undefined) {
     data = (session.platform === 'onebot' && /^\[CQ:at,id=([0-9]*)]$/.test(username))

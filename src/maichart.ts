@@ -22,17 +22,17 @@ export interface chart_stats {
 }
 
 export default class maichart {
-  song: maisong
-  object: chart_obj
-  difficulty: difficulty
-  ds: number
-  chart_summary: string
-  base_summary: string
-  chart_summary_with_base: string
-  note_summary: string
-  stat:chart_stat
-  stat_summary:string
-  constructor (object: chart_obj, song: maisong, difficulty: difficulty, stat:chart_stat) {
+  public song: maisong
+  public object: chart_obj
+  public difficulty: difficulty
+  public ds: number
+  public chart_summary: string
+  public base_summary: string
+  public chart_summary_with_base: string
+  public note_summary: string
+  public stat:chart_stat
+  public stat_summary:string
+  public constructor (object: chart_obj, song: maisong, difficulty: difficulty, stat:chart_stat) {
     this.object = object
     this.song = song
     this.difficulty = difficulty

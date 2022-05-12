@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-var */
 import path from 'path'
 import { Config, maisonglist } from '.'
@@ -34,14 +35,14 @@ const difficulty_id: string[][] = [
 export function get_difficulty_id (s: string): difficulty { // TODO:什么时候能把这个改一改 太不优雅了
   let diffid = 3
   for (let i = 0; i <= 4; i++) {
-    for (let j = 0; j < difficulty_id[i].length; j++) {
-      if (s === difficulty_id[i][j]) {
+    for (let k of difficulty_id[i]) {
+      if (s === k) {
         diffid = i
         break
       }
     }
   }
-  return <difficulty>diffid
+  return diffid as difficulty
 }
 
 export var difficulty_trans_table = { 绿: 0, 黄: 1, 红: 2, 紫: 3, 白: 4 }
@@ -75,7 +76,7 @@ export function page_split(list: string[], config: Config, page_num: number, res
 export function page_split<T>(list: T[], config: Config, page_num: number, result_prefix: string,
   converter: (v: T) => string):string
 
-export function page_split<T = string> (list: string[] | T[], config: Config, page_num: number = 1,
+export function page_split<T = string> (list: string[] | T[], config: Config, page_num = 1,
   result_prefix = '查询结果：', converter?:(v:T)=>string) {
   const page = page_num === undefined ? 0 : page_num - 1
   const list_num = Math.floor(list.length / config.result_num_max) + ((list.length % config.result_num_max) === 0 ? 0 : 1)

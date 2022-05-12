@@ -3,11 +3,13 @@ import maichart, { chart_stats } from './maichart'
 import maisong, { song_obj } from './maisong'
 
 export default class maimai_song_list {
-  jsonArray: song_obj[]
-  list: maisong[]
-  chart_list: maichart[] = []
-  promise: Promise<any>
-  constructor (ctx: Context) {
+
+  public list: maisong[]
+  public chart_list: maichart[] = []
+  public promise: Promise<any>
+
+  private jsonArray: song_obj[]
+  public constructor(ctx: Context) {
     this.promise = Promise.all([
       ctx.http('GET', 'https://www.diving-fish.com/api/maimaidxprober/music_data'),
       ctx.http('GET', 'https://www.diving-fish.com/api/maimaidxprober/chart_stats')
@@ -20,17 +22,17 @@ export default class maimai_song_list {
     )
   }
 
-  id (id: number|string) {
-    if (typeof id === 'string')id = Number.parseInt(id)
+  public id(id: number | string) {
+    if (typeof id === 'string') id = Number.parseInt(id)
     const res = this.filter((s: maisong) => s.id === id)
     return res[0]
   }
 
-  filter (filter: (i: maisong) => boolean) {
+  public filter(filter: (i: maisong) => boolean) {
     return this.list.filter(filter)
   }
 
-  filter_chart (filter: (i: maichart) => boolean) {
+  public filter_chart(filter: (i: maichart) => boolean) {
     return this.chart_list.filter(filter)
   }
 }

@@ -36,7 +36,7 @@ export default function cmd_alias (ctx: Context, config: Config) {
           }
           catch {
             const a = ['您要找的可能是以下曲目中的一首：'];
-            (<any>res).forEach((element: { song_info_summary: string; }) => {
+            (res as Array<maisong>).forEach((element: maisong) => {
               a.push(element.song_info_summary)
             })
             return a.join('\n')

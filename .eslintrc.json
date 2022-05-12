@@ -4,7 +4,7 @@
         "node": true
     },
     "extends": [
-        "standard"
+        "eslint-config-alloy/typescript"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -12,11 +12,11 @@
         "sourceType": "module"
     },
     "plugins": [
-        "@typescript-eslint"
+        "typescript","import","n","promise"
     ],
     "rules": {
         "camelcase":"off",
-        "no-unused-vars":"warn",
+        "no-unused-vars":"off",
         "no-redeclare":"off",
         "eqeqeq":"warn",
         "new-cap":"off",
