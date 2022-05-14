@@ -21,6 +21,7 @@ export default function cmd_random (ctx: Context, config: Config) {
         (options.version === '' || (chart.song.object.basic_info.from === version_transform_table[options.version]))
       )
       const chart = result[Math.floor(Math.random() * 10000) % result.length]
+      if (chart === undefined) return '没有符合条件的谱面。'
       return [`从${result.length}个符合条件的结果中随机：`, chart.chart_summary,
         chart.song.get_song_image(), chart.base_summary].join('\n')
     })
@@ -46,6 +47,7 @@ export default function cmd_random (ctx: Context, config: Config) {
         (options.type === '' || options.type === (song.is_sd ? '标准' : 'DX'))
       )
       const song = result[Math.floor(Math.random() * 10000) % result.length]
+      if (song === undefined) return '没有符合条件的谱面。'
       return [`从${result.length}个符合条件的结果中随机：`, song.song_info_summary,
         song.get_song_image(), song.song_ds_summary].join('\n')
     })
