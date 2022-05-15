@@ -1,4 +1,3 @@
-
 import { Context, Schema } from 'koishi'
 import maimai_song_list from './maimai_song_list'
 
@@ -19,14 +18,15 @@ export interface Config {
 }
 export const schema = Schema.object({
   result_num_max: Schema.number().default(10).description('返回搜索结果时单次最多显示的结果数量。'),
-  alias_result_num_max: Schema.number().default(3).description('返回别名搜索结果时最多显示的结果数量。')
+  alias_result_num_max: Schema.number().default(3).description('返回别名搜索结果时最多显示的结果数量。'),
 })
 
 export const using = ['database'] as const
 
+// eslint-disable-next-line import/no-mutable-exports
 export let maisonglist: maimai_song_list
 
-export function apply (ctx: Context, config: Config) {
+export function apply(ctx: Context, config: Config) {
   maisonglist = new maimai_song_list(ctx)
   maisonglist.promise.then(() => {
     [
@@ -37,13 +37,13 @@ export function apply (ctx: Context, config: Config) {
       mai_music,
       mai_calc,
       mai_guess,
-      mai_record
-    ].forEach(i => ctx.plugin(i, config))
+      mai_record,
+    ].forEach((i) => ctx.plugin(i, config))
   })
 
   ctx.command('maimai')
     .subcommand('.reload')
-    .action(async (_) => {
+    .action(async () => {
       maisonglist = new maimai_song_list(ctx)
       await maisonglist.promise
       return '重载完成。'

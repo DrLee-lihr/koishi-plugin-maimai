@@ -1,5 +1,7 @@
 import { segment } from 'koishi'
-import maichart, { chart_obj, chart_stat, difficulty, song_stat } from './maichart'
+import maichart, {
+  chart_obj, chart_stat, difficulty, song_stat,
+} from './maichart'
 
 interface basic_info {
   title: string,
@@ -35,8 +37,9 @@ export default class maisong {
   public song_info_summary: string
   public song_ds_summary: string
   public basic_info_summary: string
+
   public constructor(object: song_obj, stat: song_stat) {
-    this.id = parseInt(object.id)
+    this.id = parseInt(object.id, 10)
     this.object = object
     this.has_rem = object.charts.length === 5
     this.is_sd = object.type === 'SD'
@@ -49,10 +52,11 @@ export default class maisong {
       `bpm: ${object.basic_info.bpm}`,
       `version: ${object.basic_info.from}`].join('\n')
     this.charts = object.charts.map(
-      (element, index) => new maichart(element, this, index as difficulty, stat[index] as chart_stat))
+      (element, index) => new maichart(element, this, index as difficulty, stat[index] as chart_stat),
+    )
   }
 
   public get_song_image() {
-    return segment('image', { url: 'https://www.diving-fish.com/covers/' + this.id + '.jpg' })
+    return segment('image', { url: `https://www.diving-fish.com/covers/${this.id}.jpg` })
   }
 }

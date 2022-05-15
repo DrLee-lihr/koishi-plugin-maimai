@@ -2,7 +2,7 @@ import { Context, segment } from 'koishi'
 import { Config } from '..'
 import { identify } from '../mai_tool'
 
-export default function cmd_music (ctx: Context, config: Config) {
+export default function cmd_music(ctx: Context, config: Config) {
   ctx.command('maimai')
     .subcommand('.music <identifier:string> 点歌。')
     .action(async (_, identifier) => {
@@ -12,16 +12,18 @@ export default function cmd_music (ctx: Context, config: Config) {
       MIT License
       https://github.com/koishijs/koishi-plugin-music
       */
-      async function netease (title: string, keyword: string, ctx: Context) {
+      async function netease(title: string, keyword: string) {
         const data = await ctx.http.get('http://music.163.com/api/cloudsearch/pc', {
-          params: { s: keyword, type: 1, offset: 0, limit: 1 }
+          params: {
+            s: keyword, type: 1, offset: 0, limit: 1,
+          },
         })
-        if (data.code !== 200 ||
-          data.result.songCount === 0 ||
-          !data.result.songs[0].name.includes(title)) return undefined
+        if (data.code !== 200
+          || data.result.songCount === 0
+          || !data.result.songs[0].name.includes(title)) return undefined
         return {
           type: '163',
-          id: data.result.songs[0].id
+          id: data.result.songs[0].id,
         }
       }
       // fork end
@@ -29,11 +31,12 @@ export default function cmd_music (ctx: Context, config: Config) {
       const song_info = (await identify(identifier, ctx)).object.basic_info
       const templates = [
         `${song_info.title} ${song_info.artist} `,
-        `${song_info.title}`
+        `${song_info.title}`,
       ]
-      let a: { type: string; id: any; }
+      let a: { type: string; id: string|number; }
       for (const i of templates) {
-        a = await netease(song_info.title, i, ctx)
+        // eslint-disable-next-line no-await-in-loop
+        a = await netease(song_info.title, i)
         if (a !== undefined) break
       }
       if (a === undefined) {

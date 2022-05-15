@@ -16,7 +16,7 @@ export interface chart_stat {
   v: number,
   t: number
 }
-export type song_stat = [chart_stat, chart_stat, chart_stat, chart_stat, chart_stat | {}]
+export type song_stat = [chart_stat, chart_stat, chart_stat, chart_stat, chart_stat | Record<string, never>]
 export interface chart_stats {
   [k: number]: song_stat
 }
@@ -32,17 +32,18 @@ export default class maichart {
   public note_summary: string
   public stat:chart_stat
   public stat_summary:string
-  public constructor (object: chart_obj, song: maisong, difficulty: difficulty, stat:chart_stat) {
+
+  public constructor(object: chart_obj, song: maisong, diff: difficulty, stat:chart_stat) {
     this.object = object
     this.song = song
-    this.difficulty = difficulty
-    this.ds = song.object.ds[difficulty]
-    this.chart_summary = `${song.song_info_summary}[${difficulty_name[difficulty]}]`
+    this.difficulty = diff
+    this.ds = song.object.ds[diff]
+    this.chart_summary = `${song.song_info_summary}[${difficulty_name[diff]}]`
     this.chart_summary_with_base = `${this.chart_summary}(${this.ds.toFixed(1)})`
-    this.base_summary = `${difficulty_full_name[difficulty]} ${level_transform(this.ds)}(${this.ds.toFixed(1)})`
+    this.base_summary = `${difficulty_full_name[diff]} ${level_transform(this.ds)}(${this.ds.toFixed(1)})`
 
     const note_list = [`TAP: ${object.notes[0]}`, `HOLD: ${object.notes[1]}`,
-    `SLIDE: ${object.notes[2]}`]
+      `SLIDE: ${object.notes[2]}`]
     note_list.push(`${song.is_sd ? 'BREAK' : 'TOUCH'}: ${object.notes[3]}`)
     if (!song.is_sd) note_list.push(`BREAK: ${object.notes[4]}`)
     note_list.push(`charter: ${object.charter}`)
@@ -54,7 +55,7 @@ export default class maichart {
       `tag:${stat.tag}`,
       `共有${stat.count}名玩家游玩了该谱面，平均达成率：${stat.avg}`,
       `其中${stat.sssp_count}人（${Math.floor((stat.sssp_count / stat.count) * 10000) / 100}%）达成 SSS`,
-      `SSS人数在同级别曲目中排名：（${stat.v + 1}/${stat.t}）`
+      `SSS人数在同级别曲目中排名：（${stat.v + 1}/${stat.t}）`,
     ].join('\n')
   }
 }

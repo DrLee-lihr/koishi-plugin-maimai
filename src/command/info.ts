@@ -4,22 +4,21 @@ import maichart from '../maichart'
 import maisong from '../maisong'
 import { get_difficulty_id, page_split } from '../mai_tool'
 
-export default function cmd_info (ctx: Context, config: Config) {
+export default function cmd_info(ctx: Context, config: Config) {
   ctx.command('maimai <id:number> [diff:string] 根据id或难度查询乐曲或谱面信息。')
     .action(async (_, id, diff) => {
       const song = maisonglist.id(id)
       if (song === undefined) {
         return '未找到乐曲。'
       }
-      else if (diff === undefined) {
+      if (diff === undefined) {
         return [song.song_info_summary, song.get_song_image(), song.song_ds_summary, song.basic_info_summary].join('\n')
       }
-      else {
-        const chart:maichart = song.charts[get_difficulty_id(diff)]
-        const k = [song.song_info_summary,
-          song.get_song_image(), chart.base_summary, chart.note_summary, chart.stat_summary]
-        return k.join('\n')
-      }
+
+      const chart:maichart = song.charts[get_difficulty_id(diff)]
+      const k = [song.song_info_summary,
+        song.get_song_image(), chart.base_summary, chart.note_summary, chart.stat_summary]
+      return k.join('\n')
     })
     .alias('m')
 
@@ -39,22 +38,19 @@ export default function cmd_info (ctx: Context, config: Config) {
 
   ctx.command('maimai')
     .subcommand('.base <base:number> 根据给出的定数查找曲目。')
-    .action((_, base) =>
-      maisonglist.filter_chart((chart) => chart.ds === base)
-        .map(element => element.chart_summary_with_base).join('\n')
-    )
+    .action((_, base) => maisonglist.filter_chart((chart) => chart.ds === base)
+      .map((element) => element.chart_summary_with_base).join('\n'))
 
   ctx.command('maimai')
     .subcommand('.search <content:text> 根据给出的曲名查找曲目。')
     .action((_, content) => {
-      const result: string[] =
-        maisonglist.filter((i) => i.object.title.toLowerCase().includes(content.toLowerCase()))
-          .map(element => element.song_info_summary)
+      const result: string[] = maisonglist.filter((i) => i.object.title.toLowerCase().includes(content.toLowerCase()))
+        .map((element) => element.song_info_summary)
       if (result.length > config.result_num_max) {
         return `搜索结果过多（大于${config.result_num_max}条），请尝试使用更准确的内容进行搜索。`
       }
       if (result.length === 0) return '无搜索结果。'
-      else return result.join('\n')
+      return result.join('\n')
     })
 
   ctx.command('maimai')
@@ -88,15 +84,18 @@ export default function cmd_info (ctx: Context, config: Config) {
         return page_split(
           maisonglist.filter((song) => song.object.basic_info.bpm === bpm1)
             .map((element) => element.song_info_summary),
-          config, options.page)
+          config,
+          options.page,
+        )
       }
-      else {
-        if (bpm1 > bpm2) { const k = bpm1; bpm1 = bpm2; bpm2 = k }
-        return page_split(
-          maisonglist.filter((song) => song.object.basic_info.bpm >= bpm1 &&
-            song.object.basic_info.bpm <= bpm2)
-            .map((element) => element.song_info_summary),
-          config, options.page)
-      }
+
+      if (bpm1 > bpm2) { const k = bpm1; bpm1 = bpm2; bpm2 = k }
+      return page_split(
+        maisonglist.filter((song) => song.object.basic_info.bpm >= bpm1
+            && song.object.basic_info.bpm <= bpm2)
+          .map((element) => element.song_info_summary),
+        config,
+        options.page,
+      )
     })
 }

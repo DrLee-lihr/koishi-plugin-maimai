@@ -1,17 +1,17 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-var */
 import path from 'path'
+import text_to_svg from 'text-to-svg'
+import { Context } from 'koishi'
 import { Config, maisonglist } from '.'
 import { difficulty } from './maichart'
-import text_to_svg from 'text-to-svg'
 import maisong from './maisong'
 import { alias_get } from './command/alias'
-import { Context } from 'koishi'
 
-export const resource_path = path.dirname(path.dirname(require.resolve('koishi-plugin-maimai'))) + '\\resources'
+export const resource_path = `${path.dirname(path.dirname(require.resolve('koishi-plugin-maimai')))}\\resources`
 export const maimai_resource_path = `${resource_path}\\maimai`
 
-export const tts_fira = text_to_svg.loadSync(resource_path + '\\FiraCode-Medium.ttf')
+export const tts_fira = text_to_svg.loadSync(`${resource_path}\\FiraCode-Medium.ttf`)
 export const tts = text_to_svg.loadSync()
 
 export const diff = {
@@ -19,7 +19,7 @@ export const diff = {
   ADVANCED: 1,
   EXPERT: 2,
   MASTER: 3,
-  REMASTER: 4
+  REMASTER: 4,
 }
 
 export type payload_data = { qq: number | string } | { username: string }
@@ -29,13 +29,13 @@ const difficulty_id: string[][] = [
   ['1', '黄', 'adv', 'advanced'],
   ['2', '红', 'exp', 'expert'],
   ['3', '紫', 'mas', 'master', 'mst'],
-  ['4', '白', 'rem', 'remaster', 're:master', 'remas', 'remst']
+  ['4', '白', 'rem', 'remaster', 're:master', 'remas', 'remst'],
 ]
 
-export function get_difficulty_id (s: string): difficulty { // TODO:什么时候能把这个改一改 太不优雅了
+export function get_difficulty_id(s: string): difficulty { // TODO:什么时候能把这个改一改 太不优雅了
   let diffid = 3
-  for (let i = 0; i <= 4; i++) {
-    for (let k of difficulty_id[i]) {
+  for (let i = 0; i <= 4; i += 1) {
+    for (const k of difficulty_id[i]) {
       if (s === k) {
         diffid = i
         break
@@ -45,15 +45,17 @@ export function get_difficulty_id (s: string): difficulty { // TODO:什么时候
   return diffid as difficulty
 }
 
-export var difficulty_trans_table = { 绿: 0, 黄: 1, 红: 2, 紫: 3, 白: 4 }
-export function in_level (pred: number, level: string) {
+export const difficulty_trans_table = {
+  绿: 0, 黄: 1, 红: 2, 紫: 3, 白: 4,
+}
+export function in_level(pred: number, level: string) {
   if (level.includes('.')) {
     return Number.parseFloat(level) === pred
   }
   if (level.includes('+')) {
-    return Number.parseInt(level.split('+')[0]) + 0.65 <= pred && pred <= Number.parseInt(level.split('+')[0]) + 0.95
+    return Number.parseInt(level.split('+')[0], 10) + 0.65 <= pred && pred <= Number.parseInt(level.split('+')[0], 10) + 0.95
   }
-  else return Number.parseInt(level) - 0.05 <= pred && pred <= Number.parseInt(level) + 0.65
+  return Number.parseInt(level, 10) - 0.05 <= pred && pred <= Number.parseInt(level, 10) + 0.65
 }
 
 /**
@@ -76,8 +78,13 @@ export function page_split(list: string[], config: Config, page_num: number, res
 export function page_split<T>(list: T[], config: Config, page_num: number, result_prefix: string,
   converter: (v: T) => string):string
 
-export function page_split<T = string> (list: string[] | T[], config: Config, page_num = 1,
-  result_prefix = '查询结果：', converter?:(v:T)=>string) {
+export function page_split<T = string>(
+  list: string[] | T[],
+  config: Config,
+  page_num = 1,
+  result_prefix = '查询结果：',
+  converter:(v:T)=>string = (v:T) => v.toString(),
+) {
   const page = page_num === undefined ? 0 : page_num - 1
   const list_num = Math.floor(list.length / config.result_num_max) + ((list.length % config.result_num_max) === 0 ? 0 : 1)
   if (list_num <= page || page < 0) { return `所请求的页不存在（共${list_num}页）。` }
@@ -86,25 +93,24 @@ export function page_split<T = string> (list: string[] | T[], config: Config, pa
     return `${result_prefix}\n${list.slice(page * 10, Math.min(page * 10 + 10, list.length))
       .join('\n')}\n第${page + 1}页，共${list_num}页`
   }
-  else {
-    const res = (list as T[]).slice(page * 10, Math.min(page * 10 + 10, list.length)).map(converter)
-    return `${result_prefix}\n${res.join('\n')}\n第${page + 1}页，共${list_num}页`
-  }
+
+  const res = (list as T[]).slice(page * 10, Math.min(page * 10 + 10, list.length)).map(converter)
+  return `${result_prefix}\n${res.join('\n')}\n第${page + 1}页，共${list_num}页`
 }
 
-export async function identify (identifier:string, ctx:Context):Promise<maisong> {
+export async function identify(identifier:string, ctx:Context):Promise<maisong> {
   let result:maisong
   let id:number
   try {
-    id = Number.parseInt(identifier)
+    id = Number.parseInt(identifier, 10)
     result = maisonglist.id(id)
     if (result === undefined) throw Error()
     else return result
   }
   catch {
-    let res = maisonglist.filter(v => v.object.title === identifier)
+    let res = maisonglist.filter((v) => v.object.title === identifier)
     if (res.length !== 0) return res[0]
-    res = maisonglist.filter(v => v.object.title.toLowerCase().includes(identifier.toLowerCase()))
+    res = maisonglist.filter((v) => v.object.title.toLowerCase().includes(identifier.toLowerCase()))
     if (res.length === 1) return res[0]
     const alias = await alias_get(identifier, ctx)
     if (alias === undefined) throw Error()
@@ -116,7 +122,7 @@ export async function identify (identifier:string, ctx:Context):Promise<maisong>
   }
 }
 
-export var version_transform_table = {
+export const version_transform_table = {
   真: 'maimai PLUS',
   超: 'maimai GreeN',
   檄: 'maimai GreeN PLUS',
@@ -132,13 +138,13 @@ export var version_transform_table = {
   熊: 'maimai でらっくす',
   华: 'maimai でらっくす',
   爽: 'maimai でらっくす Splash',
-  煌: 'maimai でらっくす Splash'
+  煌: 'maimai でらっくす Splash',
 }
 
-export var difficulty_name: string[] = ['BSC', 'ADV', 'EXP', 'MAS', 'ReM']
-export var difficulty_full_name: string[] = ['Basic', 'Advanced', 'Expert', 'Master', 'Re:Master']
-export var level_transform = (i: number) => {
+export const difficulty_name: string[] = ['BSC', 'ADV', 'EXP', 'MAS', 'ReM']
+export const difficulty_full_name: string[] = ['Basic', 'Advanced', 'Expert', 'Master', 'Re:Master']
+export const level_transform = (i: number) => {
   if (i < 7) return Math.floor(i)
-  else if (i - Math.floor(i) > 0.65) return `${Math.floor(i)}+`
-  else return Math.floor(i)
+  if (i - Math.floor(i) > 0.65) return `${Math.floor(i)}+`
+  return Math.floor(i)
 }
