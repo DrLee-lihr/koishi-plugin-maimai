@@ -28,7 +28,7 @@ export default function cmd_music(ctx: Context, config: Config) {
       }
       // fork end
 
-      const song_info = (await identify(identifier, ctx)).object.basic_info
+      const song_info = (await identify(identifier, ctx)).basic_info
       const templates = [
         `${song_info.title} ${song_info.artist} `,
         `${song_info.title}`,

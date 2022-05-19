@@ -21,9 +21,11 @@ export interface chart_stats {
   [k: number]: song_stat
 }
 
-export default class maichart {
+export default class maichart implements chart_obj {
+  public charter: string
+  public notes: number[]
+
   public song: maisong
-  public object: chart_obj
   public difficulty: difficulty
   public ds: number
   public chart_summary: string
@@ -34,10 +36,13 @@ export default class maichart {
   public stat_summary:string
 
   public constructor(object: chart_obj, song: maisong, diff: difficulty, stat:chart_stat) {
-    this.object = object
+    this.charter = object.charter
+    this.notes = object.notes
+
     this.song = song
     this.difficulty = diff
-    this.ds = song.object.ds[diff]
+    this.ds = song.ds[diff]
+
     this.chart_summary = `${song.song_info_summary}[${difficulty_name[diff]}]`
     this.chart_summary_with_base = `${this.chart_summary}(${this.ds.toFixed(1)})`
     this.base_summary = `${difficulty_full_name[diff]} ${level_transform(this.ds)}(${this.ds.toFixed(1)})`

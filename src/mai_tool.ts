@@ -108,9 +108,9 @@ export async function identify(identifier:string, ctx:Context):Promise<maisong> 
     else return result
   }
   catch {
-    let res = maisonglist.filter((v) => v.object.title === identifier)
+    let res = maisonglist.filter((v) => v.title === identifier)
     if (res.length !== 0) return res[0]
-    res = maisonglist.filter((v) => v.object.title.toLowerCase().includes(identifier.toLowerCase()))
+    res = maisonglist.filter((v) => v.title.toLowerCase().includes(identifier.toLowerCase()))
     if (res.length === 1) return res[0]
     const alias = await alias_get(identifier, ctx)
     if (alias === undefined) throw Error()

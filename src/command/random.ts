@@ -13,11 +13,11 @@ export default function cmd_random(ctx: Context, config: Config) {
     .option('version', '-v [version:string] 谱面版本。', { fallback: '' })
     .action(({ options }) => {
       const result = maisonglist.filter_chart((chart) => (options.level === '歌' || in_level(chart.ds, options.level))
-        && (chart.song.object.basic_info.artist.toLowerCase().includes(options.artist.toLowerCase()))
-        && (chart.object.charter.toLowerCase().includes(options.charter.toLowerCase()))
+        && (chart.song.basic_info.artist.toLowerCase().includes(options.artist.toLowerCase()))
+        && (chart.charter.toLowerCase().includes(options.charter.toLowerCase()))
         && (options.difficulty === '' || (chart.difficulty === difficulty_trans_table[options.difficulty]))
         && (options.type === '' || ((chart.song.is_sd ? '标准' : 'DX') === options.type))
-        && (options.version === '' || (chart.song.object.basic_info.from === version_transform_table[options.version])))
+        && (options.version === '' || (chart.song.basic_info.from === version_transform_table[options.version])))
       const chart = result[Math.floor(Math.random() * 10000) % result.length]
       if (chart === undefined) return '没有符合条件的谱面。'
       return [`从${result.length}个符合条件的结果中随机：`, chart.chart_summary,
@@ -49,8 +49,8 @@ export default function cmd_random(ctx: Context, config: Config) {
     .option('version', '-v [version:string] 谱面版本。', { fallback: '' })
     .option('type', '-t [type:string] 歌曲类型（标准/DX）。', { fallback: '' })
     .action(({ options }) => {
-      const result = maisonglist.filter((song) => (song.object.basic_info.artist.toLowerCase().includes(options.artist.toLowerCase()))
-        && (options.version === '' || (song.object.basic_info.from === version_transform_table[options.version]))
+      const result = maisonglist.filter((song) => (song.basic_info.artist.toLowerCase().includes(options.artist.toLowerCase()))
+        && (options.version === '' || (song.basic_info.from === version_transform_table[options.version]))
         && (options.type === '' || options.type === (song.is_sd ? '标准' : 'DX')))
       const song = result[Math.floor(Math.random() * 10000) % result.length]
       if (song === undefined) return '没有符合条件的谱面。'

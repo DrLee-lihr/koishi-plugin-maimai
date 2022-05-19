@@ -22,10 +22,10 @@ export default class maimai_song_list {
   }
 
   public id(id: number | string) {
-    let num_id: number
-    if (typeof id === 'string') num_id = Number.parseInt(id, 10)
-    else num_id = id
-    const res = this.filter((s: maisong) => s.id === num_id)
+    let str_id: string
+    if (typeof id === 'number') str_id = id.toString()
+    else str_id = id
+    const res = this.filter((s: maisong) => s.id === str_id)
     return res[0]
   }
 
