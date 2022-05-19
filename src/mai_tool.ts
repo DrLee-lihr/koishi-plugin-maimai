@@ -45,9 +45,7 @@ export function get_difficulty_id(s: string): difficulty { // TODO:什么时候�
   return diffid as difficulty
 }
 
-export const difficulty_trans_table = {
-  绿: 0, 黄: 1, 红: 2, 紫: 3, 白: 4,
-}
+export const difficulty_trans_table = { 绿: 0, 黄: 1, 红: 2, 紫: 3, 白: 4 }
 export function in_level(pred: number, level: string) {
   if (level.includes('.')) {
     return Number.parseFloat(level) === pred

@@ -13,11 +13,7 @@ export default function cmd_music(ctx: Context, config: Config) {
       https://github.com/koishijs/koishi-plugin-music
       */
       async function netease(title: string, keyword: string) {
-        const data = await ctx.http.get('http://music.163.com/api/cloudsearch/pc', {
-          params: {
-            s: keyword, type: 1, offset: 0, limit: 1,
-          },
-        })
+        const data = await ctx.http.get('http://music.163.com/api/cloudsearch/pc', { params: { s: keyword, type: 1, offset: 0, limit: 1 } })
         if (data.code !== 200
           || data.result.songCount === 0
           || !data.result.songs[0].name.includes(title)) return undefined

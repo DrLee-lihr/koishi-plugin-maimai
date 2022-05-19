@@ -1,8 +1,6 @@
 import { Context } from 'koishi'
 import { Config, maisonglist } from '..'
-import {
-  get_difficulty_id, identify, page_split, payload_data, version_transform_table
-} from '../mai_tool'
+import { get_difficulty_id, identify, page_split, payload_data, version_transform_table } from '../mai_tool'
 import { song_result } from './b40'
 import maisong from '../maisong'
 

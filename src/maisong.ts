@@ -1,7 +1,5 @@
 import { segment } from 'koishi'
-import maichart, {
-  chart_obj, chart_stat, difficulty, song_stat,
-} from './maichart'
+import maichart, { chart_obj, chart_stat, difficulty, song_stat } from './maichart'
 
 interface basic_info {
   title: string,

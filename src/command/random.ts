@@ -25,19 +25,11 @@ export default function cmd_random(ctx: Context, config: Config) {
     })
     .shortcut(
       /^随个(?:([^写代0-9.+歌]*?)的)?(?:([^代的0-9.+歌]*?)写的)?(?:([^写的0-9.+歌])代的)?(标准|DX)?(绿|黄|红|紫|白)?([0-9.+]{1,4})(?:[给要当].*)?$/,
-      {
-        options: {
-          artist: '$1', charter: '$2', version: '$3', type: '$4', difficulty: '$5', level: '$6',
-        },
-      },
+      { options: { artist: '$1', charter: '$2', version: '$3', type: '$4', difficulty: '$5', level: '$6' } }
     )
     .shortcut(
       /^随个(?:([^代的0-9.+歌]*?)写的)?(?:([^写代0-9.+歌]*?)的)?(?:([^写的0-9.+歌])代的)?(标准|DX)?(绿|黄|红|紫|白)?([0-9.+]{1,4})(?:[给要当].*)?$/,
-      {
-        options: {
-          artist: '$1', charter: '$2', version: '$3', type: '$4', difficulty: '$5', level: '$6',
-        },
-      },
+      { options: { artist: '$1', charter: '$2', version: '$3', type: '$4', difficulty: '$5', level: '$6' } }
     )
     .example('m.random -l 14+ -c @dp -a t+pazolite -v 辉 -d 3 -t 标准  随机一张由@DP写的、t+pazolite作曲的、FiNALE版本的标准紫14+谱面。')
     .example('随个Tsukasa的玉子豆腐写的真代的标准白14.5')

@@ -6,9 +6,7 @@ import text_to_svg from 'text-to-svg'
 import path from 'path'
 import { Config } from '..'
 import { difficulty } from '../maichart'
-import {
-  maimai_resource_path, payload_data, tts, tts_fira,
-} from '../mai_tool'
+import { maimai_resource_path, payload_data, tts, tts_fira } from '../mai_tool'
 
 export type fc = 'fc' | 'fcp' | 'ap' | 'app' | ''
 export type fs = 'fs' | 'fsp' | 'fsd' | 'fsdp' | ''
@@ -65,15 +63,11 @@ export default function cmd_b40(ctx: Context, config: Config) {
     use_extract = true,
     color = 'white',
   ) {
-    const gener_img = (i: text_to_svg) => sharp(Buffer.from(i.getSVG(text, {
-      fontSize: size, anchor: 'left top', attributes: { fill: color },
-    })))
+    const gener_img = (i: text_to_svg) => sharp(Buffer.from(i.getSVG(text, { fontSize: size, anchor: 'left top', attributes: { fill: color } })))
     const text_img = gener_img(use_fira ? tts_fira : tts)
 
     if (use_extract && (await text_img.metadata()).width > 190) {
-      return text_img.extract({
-        left: 0, top: 0, height: size, width: 200,
-      }).toBuffer()
+      return text_img.extract({ left: 0, top: 0, height: size, width: 200 }).toBuffer()
     }
     return text_img.toBuffer()
   }
