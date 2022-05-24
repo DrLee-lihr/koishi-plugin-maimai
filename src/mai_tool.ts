@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-var */
 import path from 'path'
 import text_to_svg from 'text-to-svg'
@@ -33,21 +32,17 @@ const difficulty_id: string[][] = [
 ]
 
 export function get_difficulty_id(s: string): difficulty { // TODO:什么时候能把这个改一改 太不优雅了
-  let diffid = 3
   for (let i = 0; i <= 4; i += 1) {
     for (const k of difficulty_id[i]) {
       if (s === k) {
-        diffid = i
-        break
+        return i as difficulty
       }
     }
   }
-  return diffid as difficulty
+  return 3
 }
 
-export const difficulty_trans_table = {
-  绿: 0, 黄: 1, 红: 2, 紫: 3, 白: 4,
-}
+export const difficulty_trans_table = { 绿: 0, 黄: 1, 红: 2, 紫: 3, 白: 4 }
 export function in_level(pred: number, level: string) {
   if (level.includes('.')) {
     return Number.parseFloat(level) === pred
@@ -108,9 +103,9 @@ export async function identify(identifier:string, ctx:Context):Promise<maisong> 
     else return result
   }
   catch {
-    let res = maisonglist.filter((v) => v.object.title === identifier)
+    let res = maisonglist.filter((v) => v.title === identifier)
     if (res.length !== 0) return res[0]
-    res = maisonglist.filter((v) => v.object.title.toLowerCase().includes(identifier.toLowerCase()))
+    res = maisonglist.filter((v) => v.title.toLowerCase().includes(identifier.toLowerCase()))
     if (res.length === 1) return res[0]
     const alias = await alias_get(identifier, ctx)
     if (alias === undefined) throw Error()

@@ -30,8 +30,8 @@ export default function cmd_guess(ctx: Context, config: Config) {
 
       await session.send('猜歌开始，接下来我将依次给出7个条件，请你根据条件猜出这首歌的名字。\n英文至少五个字母匹配，其他最少三个字匹配。')
 
-      let well_known_list = maisonglist.filter((i) => (i.has_rem && i.object.ds[diff.REMASTER] >= 13)
-        || i.object.ds[diff.MASTER] >= 13)
+      let well_known_list = maisonglist.filter((i) => (i.has_rem && i.ds[diff.REMASTER] >= 13)
+        || i.ds[diff.MASTER] >= 13)
       try {
         // eslint-disable-next-line no-eval
         if (options.filter !== undefined) well_known_list = maisonglist.list.filter(eval(options.filter))
@@ -43,23 +43,23 @@ export default function cmd_guess(ctx: Context, config: Config) {
       const info_list = [
         `这首曲目${song.has_rem ? '' : '没'}有白谱`,
         `这首曲目${song.is_sd ? '' : '不'}是标准谱`,
-        `这首曲目紫谱定级是 ${level_transform(song.object.ds[diff.MASTER])}`,
-        `这首曲目紫谱的谱师是 ${song.charts[diff.MASTER].object.charter}`,
-        `这首曲目紫谱的绝赞个数是 ${song.charts[diff.MASTER].object.notes[song.is_sd ? 3 : 4]}`,
+        `这首曲目紫谱定级是 ${level_transform(song.ds[diff.MASTER])}`,
+        `这首曲目紫谱的谱师是 ${song.charts[diff.MASTER].charter}`,
+        `这首曲目紫谱的绝赞个数是 ${song.charts[diff.MASTER].notes[song.is_sd ? 3 : 4]}`,
         `这首曲目紫谱在查分器中的 Tag 是 ${song.charts[diff.MASTER].stat.tag}`,
-        `这首曲目属于 ${song.object.basic_info.genre} 分区`,
-        `这首曲目属于 ${song.object.basic_info.from} 版本`,
-        `这首曲目的 BPM 是 ${song.object.basic_info.bpm}`,
-        `这首曲目的曲师是 ${song.object.basic_info.artist}`,
-        `这首曲目的紫谱定数为 ${song.object.ds[diff.MASTER]}`,
+        `这首曲目属于 ${song.basic_info.genre} 分区`,
+        `这首曲目属于 ${song.basic_info.from} 版本`,
+        `这首曲目的 BPM 是 ${song.basic_info.bpm}`,
+        `这首曲目的曲师是 ${song.basic_info.artist}`,
+        `这首曲目的紫谱定数为 ${song.ds[diff.MASTER]}`,
       ]
       if (song.has_rem) {
         info_list.push(
-          `这首曲目白谱定级是 ${level_transform(song.object.ds[diff.REMASTER])}`,
-          `这首曲目白谱的谱师是 ${song.charts[diff.REMASTER].object.charter}`,
-          `这首曲目白谱的绝赞个数是 ${song.charts[diff.REMASTER].object.notes[song.is_sd ? 3 : 4]}`,
+          `这首曲目白谱定级是 ${level_transform(song.ds[diff.REMASTER])}`,
+          `这首曲目白谱的谱师是 ${song.charts[diff.REMASTER].charter}`,
+          `这首曲目白谱的绝赞个数是 ${song.charts[diff.REMASTER].notes[song.is_sd ? 3 : 4]}`,
           `这首曲目白谱在查分器中的 Tag 是 ${song.charts[diff.REMASTER].stat.tag}`,
-          `这首曲目的白谱定数为 ${song.object.ds[diff.REMASTER]}`,
+          `这首曲目的白谱定数为 ${song.ds[diff.REMASTER]}`,
         )
       }
 
@@ -76,17 +76,17 @@ export default function cmd_guess(ctx: Context, config: Config) {
       // console.log('发完了')
       const midware = ctx.middleware((session_1, next) => {
         function judge(song_name: string, content: string) {
-          if (RegExp(`^[a-zA-Z]{${Math.min(5, song.object.title.length)},}$`).test(content)
+          if (RegExp(`^[a-zA-Z]{${Math.min(5, song.title.length)},}$`).test(content)
             && song_name.toLowerCase().includes(content.toLowerCase())
           ) return true
           if (
-            !RegExp(`^[a-zA-Z]{${Math.min(3, song.object.title.length)},}$`).test(content)
+            !RegExp(`^[a-zA-Z]{${Math.min(3, song.title.length)},}$`).test(content)
             && song_name.toLowerCase().includes(content.toLowerCase())
           ) return true
           return false
         }
 
-        if (judge(song.object.title, session_1.content)) {
+        if (judge(song.title, session_1.content)) {
           midware()
           unset_guessing()
 

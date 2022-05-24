@@ -1,8 +1,6 @@
 import { Context } from 'koishi'
 import { Config, maisonglist } from '..'
-import {
-  get_difficulty_id, identify, page_split, payload_data, version_transform_table
-} from '../mai_tool'
+import { get_difficulty_id, identify, page_split, payload_data, version_transform_table } from '../mai_tool'
 import { song_result } from './b40'
 import maisong from '../maisong'
 
@@ -120,8 +118,8 @@ export default function cmd_record(ctx: Context, config: Config) {
 
       let result: record[]
       try {
-        result = (await get_version_record(ctx, data, song.object.basic_info.from))
-          .verlist.filter((v) => v.id === song.id && diff_index === v.level_index)
+        result = (await get_version_record(ctx, data, song.basic_info.from))
+          .verlist.filter((v) => v.id.toString() === song.id && diff_index === v.level_index)
       }
       catch (e) {
         if (e.response.data.message === 'user not exist') return '用户不存在。'

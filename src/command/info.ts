@@ -16,8 +16,10 @@ export default function cmd_info(ctx: Context, config: Config) {
       }
 
       const chart:maichart = song.charts[get_difficulty_id(diff)]
+      if (chart === undefined) return '这首歌没有白谱。'
       const k = [song.song_info_summary,
         song.get_song_image(), chart.base_summary, chart.note_summary, chart.stat_summary]
+      // console.log(song)
       return k.join('\n')
     })
     .alias('m')
@@ -39,12 +41,12 @@ export default function cmd_info(ctx: Context, config: Config) {
   ctx.command('maimai')
     .subcommand('.base <base:number> 根据给出的定数查找曲目。')
     .action((_, base) => maisonglist.filter_chart((chart) => chart.ds === base)
-      .map((element) => element.chart_summary_with_base).join('\n'))
+      .map((element) => element.chart_summary_with_base).join('\n') ?? '未找到谱面。')
 
   ctx.command('maimai')
     .subcommand('.search <content:text> 根据给出的曲名查找曲目。')
     .action((_, content) => {
-      const result: string[] = maisonglist.filter((i) => i.object.title.toLowerCase().includes(content.toLowerCase()))
+      const result: string[] = maisonglist.filter((i) => i.title.toLowerCase().includes(content.toLowerCase()))
         .map((element) => element.song_info_summary)
       if (result.length > config.result_num_max) {
         return `搜索结果过多（大于${config.result_num_max}条），请尝试使用更准确的内容进行搜索。`
@@ -57,7 +59,7 @@ export default function cmd_info(ctx: Context, config: Config) {
     .subcommand('.artist <artist:string> 搜索对应曲师的曲目。')
     .option('page', '-p [page:number] 当结果有多页时设定要输出的页码。', { fallback: 1 })
     .action(({ options }, artist) => {
-      const list = maisonglist.filter((i) => i.object.basic_info.artist
+      const list = maisonglist.filter((i) => i.basic_info.artist
         .toLowerCase().includes(artist.toLowerCase()))
       if (list.length === 0) return '未找到结果，请尝试使用曲师的名义原文本进行搜索。'
       return page_split(list.map((i) => i.song_info_summary), config, options.page)
@@ -67,7 +69,7 @@ export default function cmd_info(ctx: Context, config: Config) {
     .subcommand('.charter <charter:string>  搜索对应谱师创作的谱面（定数降序排序）。')
     .option('page', '-p [page:number] 当结果有多页时设定要输出的页码。', { fallback: 1 })
     .action(({ options }, charter) => {
-      const list = maisonglist.filter_chart((i) => i.object.charter
+      const list = maisonglist.filter_chart((i) => i.charter
         .toLowerCase().includes(charter.toLowerCase()))
       if (list.length === 0) return '未找到结果，请尝试使用谱师的名义原文本进行搜索。'
       list.sort((a, b) => b.ds - a.ds)
@@ -81,21 +83,17 @@ export default function cmd_info(ctx: Context, config: Config) {
     .option('page', '-p [page:number] 当结果有多页时设定要输出的页码。', { fallback: 1 })
     .action(({ options }, bpm1, bpm2) => {
       if (bpm2 === undefined) {
-        return page_split(
-          maisonglist.filter((song) => song.object.basic_info.bpm === bpm1)
-            .map((element) => element.song_info_summary),
-          config,
-          options.page,
-        )
+        const list = maisonglist.filter((song) => song.basic_info.bpm === bpm1)
+          .map((element) => element.song_info_summary)
+        if (list.length === 0) return '未找到结果。'
+        return page_split(list, config, options.page)
       }
 
       if (bpm1 > bpm2) { const k = bpm1; bpm1 = bpm2; bpm2 = k }
-      return page_split(
-        maisonglist.filter((song) => song.object.basic_info.bpm >= bpm1
-            && song.object.basic_info.bpm <= bpm2)
-          .map((element) => element.song_info_summary),
-        config,
-        options.page,
-      )
+      const list = maisonglist.filter((song) => song.basic_info.bpm >= bpm1
+        && song.basic_info.bpm <= bpm2)
+        .map((element) => element.song_info_summary)
+      if (list.length === 0) return '未找到结果。'
+      return page_split(list, config, options.page)
     })
 }

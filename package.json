@@ -32,18 +32,18 @@
     "maimai"
   ],
   "peerDependencies": {
-    "koishi": "^4.7.0"
+    "koishi": "^4.7.1"
   },
   "dependencies": {
-    "sharp": "^0.30.4",
+    "sharp": "^0.30.5",
     "text-to-svg": "^3.1.5"
   },
   "devDependencies": {
     "@types/sharp": "^0.30.2",
     "@types/text-to-svg": "^3.1.1",
-    "@typescript-eslint/eslint-plugin": "^5.23.0",
-    "@typescript-eslint/parser": "^5.23.0",
-    "eslint": "^8.15.0",
+    "@typescript-eslint/eslint-plugin": "^5.26.0",
+    "@typescript-eslint/parser": "^5.26.0",
+    "eslint": "^8.16.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-n": "^15.2.0",

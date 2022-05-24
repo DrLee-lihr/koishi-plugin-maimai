@@ -13,11 +13,11 @@ export default function cmd_random(ctx: Context, config: Config) {
     .option('version', '-v [version:string] 谱面版本。', { fallback: '' })
     .action(({ options }) => {
       const result = maisonglist.filter_chart((chart) => (options.level === '歌' || in_level(chart.ds, options.level))
-        && (chart.song.object.basic_info.artist.toLowerCase().includes(options.artist.toLowerCase()))
-        && (chart.object.charter.toLowerCase().includes(options.charter.toLowerCase()))
+        && (chart.song.basic_info.artist.toLowerCase().includes(options.artist.toLowerCase()))
+        && (chart.charter.toLowerCase().includes(options.charter.toLowerCase()))
         && (options.difficulty === '' || (chart.difficulty === difficulty_trans_table[options.difficulty]))
         && (options.type === '' || ((chart.song.is_sd ? '标准' : 'DX') === options.type))
-        && (options.version === '' || (chart.song.object.basic_info.from === version_transform_table[options.version])))
+        && (options.version === '' || (chart.song.basic_info.from === version_transform_table[options.version])))
       const chart = result[Math.floor(Math.random() * 10000) % result.length]
       if (chart === undefined) return '没有符合条件的谱面。'
       return [`从${result.length}个符合条件的结果中随机：`, chart.chart_summary,
@@ -25,19 +25,11 @@ export default function cmd_random(ctx: Context, config: Config) {
     })
     .shortcut(
       /^随个(?:([^写代0-9.+歌]*?)的)?(?:([^代的0-9.+歌]*?)写的)?(?:([^写的0-9.+歌])代的)?(标准|DX)?(绿|黄|红|紫|白)?([0-9.+]{1,4})(?:[给要当].*)?$/,
-      {
-        options: {
-          artist: '$1', charter: '$2', version: '$3', type: '$4', difficulty: '$5', level: '$6',
-        },
-      },
+      { options: { artist: '$1', charter: '$2', version: '$3', type: '$4', difficulty: '$5', level: '$6' } }
     )
     .shortcut(
       /^随个(?:([^代的0-9.+歌]*?)写的)?(?:([^写代0-9.+歌]*?)的)?(?:([^写的0-9.+歌])代的)?(标准|DX)?(绿|黄|红|紫|白)?([0-9.+]{1,4})(?:[给要当].*)?$/,
-      {
-        options: {
-          artist: '$1', charter: '$2', version: '$3', type: '$4', difficulty: '$5', level: '$6',
-        },
-      },
+      { options: { artist: '$1', charter: '$2', version: '$3', type: '$4', difficulty: '$5', level: '$6' } }
     )
     .example('m.random -l 14+ -c @dp -a t+pazolite -v 辉 -d 3 -t 标准  随机一张由@DP写的、t+pazolite作曲的、FiNALE版本的标准紫14+谱面。')
     .example('随个Tsukasa的玉子豆腐写的真代的标准白14.5')
@@ -49,8 +41,8 @@ export default function cmd_random(ctx: Context, config: Config) {
     .option('version', '-v [version:string] 谱面版本。', { fallback: '' })
     .option('type', '-t [type:string] 歌曲类型（标准/DX）。', { fallback: '' })
     .action(({ options }) => {
-      const result = maisonglist.filter((song) => (song.object.basic_info.artist.toLowerCase().includes(options.artist.toLowerCase()))
-        && (options.version === '' || (song.object.basic_info.from === version_transform_table[options.version]))
+      const result = maisonglist.filter((song) => (song.basic_info.artist.toLowerCase().includes(options.artist.toLowerCase()))
+        && (options.version === '' || (song.basic_info.from === version_transform_table[options.version]))
         && (options.type === '' || options.type === (song.is_sd ? '标准' : 'DX')))
       const song = result[Math.floor(Math.random() * 10000) % result.length]
       if (song === undefined) return '没有符合条件的谱面。'

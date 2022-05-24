@@ -30,7 +30,7 @@ export default function cmd_calc(ctx: Context, config: Config) {
       const chart = song.charts[get_difficulty_id(diff)]
       if (chart === undefined || achieve > 101 || achieve < 0) return error
 
-      const { notes } = chart.object
+      const { notes } = chart
       let max_combo = 0
       notes.forEach((m) => { max_combo += m })
 

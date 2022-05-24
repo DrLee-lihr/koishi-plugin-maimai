@@ -1,7 +1,5 @@
 import { segment } from 'koishi'
-import maichart, {
-  chart_obj, chart_stat, difficulty, song_stat,
-} from './maichart'
+import maichart, { chart_obj, chart_stat, difficulty, song_stat } from './maichart'
 
 interface basic_info {
   title: string,
@@ -27,30 +25,44 @@ export interface song_obj {
   basic_info: basic_info
 }
 
-export default class maisong {
-  public id: number
-  public object: song_obj
+export default class maisong implements song_obj {
+  public id: string
+  public title: string
+  public type: 'SD'|'DX'
+  public ds: number[]
+  public level: string[]
+  public cids: number[]
   public charts: maichart[]
+  public basic_info: basic_info
+
   public has_rem: boolean
   public is_sd: boolean
-  public type: string
+
   public song_info_summary: string
   public song_ds_summary: string
   public basic_info_summary: string
 
   public constructor(object: song_obj, stat: song_stat) {
-    this.id = parseInt(object.id, 10)
-    this.object = object
+    this.id = object.id
+    this.title = object.title
+    this.type = object.type
+    this.ds = object.ds
+    this.level = object.level
+    this.cids = object.cids
+    this.basic_info = object.basic_info
+
     this.has_rem = object.charts.length === 5
     this.is_sd = object.type === 'SD'
-    this.type = object.type
-    this.song_info_summary = `${this.id}.${object.title}(${this.type})`
+
+    this.song_info_summary = `${this.id}.${this.title}(${this.type})`
     this.song_ds_summary = object.ds.map((i) => i.toFixed(1)).join('/')
     this.basic_info_summary = [
       `artist: ${object.basic_info.artist}`,
       `genre: ${object.basic_info.genre}`,
       `bpm: ${object.basic_info.bpm}`,
       `version: ${object.basic_info.from}`].join('\n')
+
+    // chart 初始化放在最后 是因为 chart 的构造函数会用到 song 前面处理的参数
     this.charts = object.charts.map(
       (element, index) => new maichart(element, this, index as difficulty, stat[index] as chart_stat),
     )
