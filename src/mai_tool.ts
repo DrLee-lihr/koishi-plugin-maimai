@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-var */
 import path from 'path'
 import text_to_svg from 'text-to-svg'
@@ -33,16 +32,14 @@ const difficulty_id: string[][] = [
 ]
 
 export function get_difficulty_id(s: string): difficulty { // TODO:什么时候能把这个改一改 太不优雅了
-  let diffid = 3
   for (let i = 0; i <= 4; i += 1) {
     for (const k of difficulty_id[i]) {
       if (s === k) {
-        diffid = i
-        break
+        return i as difficulty
       }
     }
   }
-  return diffid as difficulty
+  return 3
 }
 
 export const difficulty_trans_table = { 绿: 0, 黄: 1, 红: 2, 紫: 3, 白: 4 }
