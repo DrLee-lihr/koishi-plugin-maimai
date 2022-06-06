@@ -2,6 +2,14 @@ import { Context } from 'koishi'
 import { Config, maisonglist } from '..'
 import maisong from '../maisong'
 
+/**
+ * 别名 => 乐曲
+ * @param alias 要查询的别名
+ * @param ctx 上下文，一个上下文到处传（
+ * @param config 设置对象
+ * @returns `undefined | maisong | maisong[]` （undefined 指无结果）
+ * @throws 网络问题 或 由于别名结果过多抛出异常，需要自行 catch 并看 Error 的 text 判断
+ */
 export async function alias_get(alias: string, ctx: Context, config?: Config) {
   const response = await ctx.http('GET', encodeURI(`https://maimai.ohara-rinne.tech/api/alias/query/${alias}`))
   if (response.data.length === 0) {
@@ -17,9 +25,8 @@ export async function alias_get(alias: string, ctx: Context, config?: Config) {
       }
     }
     const res: maisong[] = []
-    response.data.forEach((element: JSON) => {
-      // eslint-disable-next-line dot-notation
-      res.push(maisonglist.id(element['musicId']))
+    response.data.forEach((element: { musicId: string | number }) => {
+      res.push(maisonglist.id(element.musicId))
     })
     return res
   }

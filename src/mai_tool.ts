@@ -32,12 +32,8 @@ const difficulty_id: string[][] = [
 ]
 
 export function get_difficulty_id(s: string): difficulty { // TODO:什么时候能把这个改一改 太不优雅了
-  for (let i = 0; i <= 4; i += 1) {
-    for (const k of difficulty_id[i]) {
-      if (s === k) {
-        return i as difficulty
-      }
-    }
+  for (const i of [0, 1, 2, 3, 4]) {
+    if (difficulty_id[i].includes(s)) return i as difficulty
   }
   return 3
 }
